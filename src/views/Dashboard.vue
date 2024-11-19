@@ -26,6 +26,7 @@
           </option>
 
           <!-- Boshqa viloyatlar qo'shilishi mumkin -->
+           <!-- Boshqa viloyatlar qo'shilishi mumkin -->
         </select>
         <select v-model="district">
           <option value="">Tumanlar</option>
