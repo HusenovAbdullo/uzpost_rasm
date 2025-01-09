@@ -365,7 +365,7 @@ export default {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://10.100.0.28/api/show_photos/users/",
+          "https://trackapi.pochta.uz/api/show_photos/users/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
