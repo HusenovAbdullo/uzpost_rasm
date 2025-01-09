@@ -26,7 +26,7 @@
           </option>
 
           <!-- Boshqa viloyatlar qo'shilishi mumkin -->
-           <!-- Boshqa viloyatlar qo'shilishi mumkin -->
+          <!-- Boshqa viloyatlar qo'shilishi mumkin -->
         </select>
         <select v-model="district">
           <option value="">Tumanlar</option>
@@ -38,16 +38,16 @@
         <input v-model="fish" placeholder="F.I.SH" />
         <input v-model="post_name" placeholder="Aloqa bo'lim" />
         <input v-model="date" placeholder="ДД.ММ.РРРР" type="date" />
+        <select v-model="is_person">
+          <option value="">Haqiqiyligini tekshirish</option>
+          <option value="True">Xato</option>
+          <option value="False">To'g'ri</option>
+        </select>
         <button @click="applyFilter">Filterni qo'llash</button>
       </div>
     </div>
     <div class="results">
-      <div
-        v-for="item in images"
-        :key="item.barcode"
-        class="image-card"
-        @click="openPopup(item)"
-      >
+      <div v-for="item in images" :key="item.barcode" class="image-card" @click="openPopup(item)">
         <img :src="`https://trackapi.pochta.uz/${item.photo}`" alt="Image" />
       </div>
     </div>
@@ -56,12 +56,8 @@
     <div v-if="showPopup" class="popup" @click.self="closePopup">
       <div class="popup-content">
         <span class="close" @click="closePopup">&times;</span>
-        <img
-          :src="`https://trackapi.pochta.uz/${popupData.photo}`"
-          alt="Popup Image"
-          @click="toggleFullScreen"
-          class="popup-image image-container"
-        />
+        <img :src="`https://trackapi.pochta.uz/${popupData.photo}`" alt="Popup Image" @click="toggleFullScreen"
+          class="popup-image image-container" />
         <p>Barcode: {{ popupData.barcode }}</p>
         <p>F.I.SH: {{ popupData.fish }}</p>
         <p>Viloyat: {{ popupData.region__name }}</p>
@@ -74,19 +70,11 @@
 
     <!-- Pagination controls -->
     <div class="pagination">
-      <button
-        @click="goToPage(currentPage - 1)"
-        :disabled="!previous"
-        class="pag-button"
-      >
+      <button @click="goToPage(currentPage - 1)" :disabled="!previous" class="pag-button">
         Orqaga
       </button>
       <span class="page-info">{{ currentPage }} ... {{ totalPages }}</span>
-      <button
-        @click="goToPage(currentPage + 1)"
-        :disabled="!next"
-        class="pag-button"
-      >
+      <button @click="goToPage(currentPage + 1)" :disabled="!next" class="pag-button">
         Oldinga
       </button>
     </div>
@@ -115,6 +103,7 @@ export default {
       popupData: {},
       itemsPerPage: 200, // Qo'shilgan o'zgaruvchi
       districts: [], // Tumonlar uchun o'zgaruvchi
+      is_person: "", // Yangi filter uchun o'zgaruvchi
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -376,18 +365,24 @@ export default {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://trackapi.pochta.uz/api/show_photos/users/",
+          "http://10.100.0.28/api/show_photos/users/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
+
             },
             params: {
               barcode: params.barcode || this.barcode,
+
               fish: params.fish || this.fish,
+
               region: params.region || this.region,
+
               district: params.district || this.district,
+
               post_name: params.post_name || this.post_name,
-              date: params.date || this.date,
+              delivery_date: params.date || this.date, // delivery_date parametri qo‘shildi
+              is_person: params.is_person || this.is_person, // Yangi parametr
               page: this.currentPage,
               page_size: this.itemsPerPage, // Bu joyda itemsPerPage qo'shiladi
             },
@@ -462,9 +457,12 @@ export default {
   width: 100%;
   z-index: 1000;
 }
+
 .banner h2 {
-  font-size: 36px; /* Yozuvning kattaligi */
-  font-weight: bold; /* Yozuvning qalinligi */
+  font-size: 36px;
+  /* Yozuvning kattaligi */
+  font-weight: bold;
+  /* Yozuvning qalinligi */
 }
 
 .logout-button {
@@ -494,7 +492,8 @@ export default {
   gap: 10px;
 
   position: fixed;
-  top: 85px; /* Banner balandligini hisobga olish kerak */
+  top: 85px;
+  /* Banner balandligini hisobga olish kerak */
   left: 0;
   width: 100%;
   background-color: #303294;
@@ -540,25 +539,31 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
-  margin-top: 200px; /* Banner va filters bo'shlig'ini hisobga olish */
+  margin-top: 200px;
+  /* Banner va filters bo'shlig'ini hisobga olish */
 }
 
 .image-card {
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
-  width: 180px; /* Kichikroq o'lcham */
-  height: 180px; /* Kichikroq o'lcham */
+  width: 180px;
+  /* Kichikroq o'lcham */
+  height: 180px;
+  /* Kichikroq o'lcham */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   cursor: pointer;
-  overflow: hidden; /* To'liq ko'rinish uchun overflow yashirish */
+  overflow: hidden;
+  /* To'liq ko'rinish uchun overflow yashirish */
 }
 
 .image-card img {
   width: 100%;
-  height: 100%; /* Barcha bo'sh joyni to'ldirish */
-  object-fit: cover; /* Rasmni to'ldirish */
+  height: 100%;
+  /* Barcha bo'sh joyni to'ldirish */
+  object-fit: cover;
+  /* Rasmni to'ldirish */
   margin-bottom: 10px;
 }
 
@@ -586,16 +591,22 @@ export default {
   background: white;
   padding: 15px;
   border-radius: 8px;
-  width: 410px; /* Kichikroq o'lcham */
-  max-width: 90%; /* Ekran o'lchamidan kelib chiqqan holda */
+  width: 410px;
+  /* Kichikroq o'lcham */
+  max-width: 90%;
+  /* Ekran o'lchamidan kelib chiqqan holda */
   position: relative;
 }
 
 .popup-image {
-  width: 400px; /* Rasmning kengligini 200px ga kamaytirish */
-  height: 550px; /* Moslashtirilgan balandlik */
-  display: block; /* Rasmni blok darajasidagi elementga aylantirish */
-  margin: 0; /* Agar kerak bo'lsa, marginni o'rnatish */
+  width: 400px;
+  /* Rasmning kengligini 200px ga kamaytirish */
+  height: 550px;
+  /* Moslashtirilgan balandlik */
+  display: block;
+  /* Rasmni blok darajasidagi elementga aylantirish */
+  margin: 0;
+  /* Agar kerak bo'lsa, marginni o'rnatish */
 }
 
 .close {
@@ -631,14 +642,21 @@ export default {
 .pag-button:hover:not(:disabled) {
   background-color: #303294;
 }
+
 p {
-  line-height: 1; /* Qatorlar orasini yaqinlashtirish uchun */
-  text-align: left; /* Chap tomonga tekislash */
+  line-height: 1;
+  /* Qatorlar orasini yaqinlashtirish uchun */
+  text-align: left;
+  /* Chap tomonga tekislash */
 }
+
 .image-container {
-  text-align: left; /* Chap tomonga tekislash */
+  text-align: left;
+  /* Chap tomonga tekislash */
 }
+
 .page-info {
-  margin: 0 20px; /* Raqamlar va tugmalar o'rtasidagi bo'sh joy */
+  margin: 0 20px;
+  /* Raqamlar va tugmalar o'rtasidagi bo'sh joy */
 }
 </style>
