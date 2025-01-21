@@ -1,15 +1,12 @@
 <template>
   <div class="dashboard">
-    <!-- Banner -->
     <div class="banner">
       <h2>GIBRID XATLARINI TOPSHIRILISHINI NAZORAT QILISH DASTURI</h2>
       <button @click="logout" class="logout-button">Chiqish</button>
     </div>
-
-    <!-- Filters -->
     <div class="filters">
       <div class="filter-card">
-        <select v-model="localRegion" @change="updateDistricts">
+        <select v-model="region" @change="updateDistricts">
           <option value="">Viloyatlar</option>
           <option value="Toshkent shahar">Toshkent shahar</option>
           <option value="Surxondaryo">Surxondaryo</option>
@@ -27,15 +24,18 @@
           <option value="Qoraqalpog'iston Respublikasi">
             Qoraqalpog'iston Respublikasi
           </option>
+
+          <!-- Boshqa viloyatlar qo'shilishi mumkin -->
+          <!-- Boshqa viloyatlar qo'shilishi mumkin -->
         </select>
-        <select v-model="localDistrict">
+        <select v-model="district">
           <option value="">Tumanlar</option>
           <option v-for="d in districts" :key="d" :value="d">
             {{ d }}
           </option>
         </select>
         <input v-model="barcode" placeholder="Barcode" />
-        <input v-model="localFish" placeholder="F.I.SH" />
+        <input v-model="fish" placeholder="F.I.SH" />
         <input v-model="post_name" placeholder="Aloqa bo'lim" />
         <input v-model="date" placeholder="ДД.ММ.РРРР" type="date" />
         <select v-model="is_person">
@@ -44,11 +44,9 @@
           <option value="False">To'g'ri</option>
         </select>
         <button @click="applyFilter">Filterni qo'llash</button>
-        <button @click="goToStatistics" style="background-color: green;">Statistika</button>
+        <button @click="goToStatistics" class="statistics-button">Statistika</button>
       </div>
     </div>
-
-    <!-- Results -->
     <div class="results">
       <div v-for="item in images" :key="item.barcode" class="image-card" @click="openPopup(item)">
         <img :src="`https://trackapi.pochta.uz/${item.photo}`" alt="Image" />
@@ -59,7 +57,8 @@
     <div v-if="showPopup" class="popup" @click.self="closePopup">
       <div class="popup-content">
         <span class="close" @click="closePopup">&times;</span>
-        <img :src="`https://trackapi.pochta.uz/${popupData.photo}`" alt="Popup Image" class="popup-image" />
+        <img :src="`https://trackapi.pochta.uz/${popupData.photo}`" alt="Popup Image" @click="toggleFullScreen"
+          class="popup-image image-container" />
         <p>Barcode: {{ popupData.barcode }}</p>
         <p>F.I.SH: {{ popupData.fish }}</p>
         <p>Viloyat: {{ popupData.region__name }}</p>
@@ -70,7 +69,7 @@
       </div>
     </div>
 
-    <!-- Pagination -->
+    <!-- Pagination controls -->
     <div class="pagination">
       <button @click="goToPage(currentPage - 1)" :disabled="!previous" class="pag-button">
         Orqaga
@@ -88,13 +87,12 @@ import axios from "axios";
 
 export default {
   name: "DashboardPage",
-  props: ["fish", "region", "district"], // F.I.SH, region va district parametrlarini qabul qilish
   data() {
     return {
       barcode: "",
-      localFish: this.fish || "", // Mahalliy F.I.SH
-      localRegion: this.region || "", // Mahalliy viloyat
-      localDistrict: this.district || "", // Mahalliy tuman
+      fish: "",
+      region: "",
+      district: "",
       post_name: "",
       date: "",
       images: [],
@@ -104,36 +102,26 @@ export default {
       previous: null,
       showPopup: false,
       popupData: {},
-      itemsPerPage: 200,
-      districts: [], // Tumanlar ro'yxati
-      is_person: "",
+      itemsPerPage: 200, // Qo'shilgan o'zgaruvchi
+      districts: [], // Tumonlar uchun o'zgaruvchi
+      is_person: "", // Yangi filter uchun o'zgaruvchi
     };
   },
-  watch: {
-    region(newVal) {
-      this.localRegion = newVal;
-      this.updateDistricts();
-      this.applyFilter(); // Region o'zgarganda filterni qo'llash
-    },
-    district(newVal) {
-      this.localDistrict = newVal;
-      this.applyFilter(); // District o'zgarganda filterni qo'llash
-    },
-    fish(newVal) {
-      this.localFish = newVal;
-      this.applyFilter(); // F.I.SH o'zgarganda filterni qo'llash
-    },
+  beforeRouteEnter(to, from, next) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      next();
+    } else {
+      next({ name: "Login" });
+    }
   },
   methods: {
     logout() {
       localStorage.removeItem("token");
       this.$router.push({ name: "Login" });
     },
-    goToStatistics() {
-      this.$router.push('/statistika');
-    },
     updateDistricts() {
-      if (this.localRegion === "Buxoro") {
+      if (this.region === "Buxoro") {
         this.districts = [
           "Jondor",
           "Buxoro Tuman",
@@ -148,7 +136,7 @@ export default {
           "Vobkent",
           "Qorako'l",
         ];
-      } else if (this.localRegion === "Toshkent shahar") {
+      } else if (this.region === "Toshkent shahar") {
         this.districts = [
           "Bektemir",
           "Chilanzar",
@@ -163,7 +151,7 @@ export default {
           "Yunusabad",
           "Yakkasaray",
         ];
-      } else if (this.localRegion === "Samarqand") {
+      } else if (this.region === "Samarqand") {
         this.districts = [
           "Samarqand",
           "Nurobod",
@@ -183,7 +171,7 @@ export default {
           "Bulung'ur",
           "Kattaqo'rg'on tumani",
         ];
-      } else if (this.localRegion === "Andijon") {
+      } else if (this.region === "Andijon") {
         this.districts = [
           "Izboskan",
           "Oltinko'l",
@@ -201,7 +189,7 @@ export default {
           "Bo'ston",
           "Qo'rg'ontepa",
         ];
-      } else if (this.localRegion === "Surxondaryo") {
+      } else if (this.region === "Surxondaryo") {
         this.districts = [
           "Sho'rchi",
           "Boysun",
@@ -218,7 +206,7 @@ export default {
           "Qiziriq",
           "Denov",
         ];
-      } else if (this.localRegion === "Namangan") {
+      } else if (this.region === "Namangan") {
         this.districts = [
           "Namangan shahri",
           "Uychi",
@@ -233,7 +221,7 @@ export default {
           "Uchqo'rg'on",
           "Norin",
         ];
-      } else if (this.localRegion === "Farg'ona") {
+      } else if (this.region === "Farg'ona") {
         this.districts = [
           "Dang'ara",
           "Beshariq",
@@ -255,7 +243,7 @@ export default {
           "Bog'dod",
           "Marg'ilon",
         ];
-      } else if (this.localRegion === "Jizzax") {
+      } else if (this.region === "Jizzax") {
         this.districts = [
           "Mirzacho'l",
           "Jizzax shahri",
@@ -271,7 +259,7 @@ export default {
           "Baxmal",
           "Zarbdor",
         ];
-      } else if (this.localRegion === "Sirdaryo") {
+      } else if (this.region === "Sirdaryo") {
         this.districts = [
           "Oqoltin",
           "Guliston",
@@ -283,7 +271,7 @@ export default {
           "Sardoba",
           "Mirzaobod",
         ];
-      } else if (this.localRegion === "Qashqadaryo") {
+      } else if (this.region === "Qashqadaryo") {
         this.districts = [
           "Beshkent",
           "Qamashi",
@@ -300,7 +288,7 @@ export default {
           "Dehqonobod",
           "Shahrisabz",
         ];
-      } else if (this.localRegion === "Toshkent viloyati") {
+      } else if (this.region === "Toshkent viloyati") {
         this.districts = [
           "Olmaliq shahri",
           "Buka",
@@ -323,7 +311,7 @@ export default {
           "Chinaz",
           "Zangiota",
         ];
-      } else if (this.localRegion === "Xorazm") {
+      } else if (this.region === "Xorazm") {
         this.districts = [
           "Tuproqqal'a",
           "Xonqa",
@@ -338,7 +326,7 @@ export default {
           "Xiva",
           "Hazorasp",
         ];
-      } else if (this.localRegion === "Navoiy") {
+      } else if (this.region === "Navoiy") {
         this.districts = [
           "Karmana",
           "Konimex",
@@ -350,7 +338,7 @@ export default {
           "Nurota",
           "Zarafshan",
         ];
-      } else if (this.localRegion === "Qoraqalpog'iston Respublikasi") {
+      } else if (this.region === "Qoraqalpog'iston Respublikasi") {
         this.districts = [
           "Ellikqala",
           "Qo'ng'irot",
@@ -371,30 +359,38 @@ export default {
       } else {
         this.districts = []; // Mintaqa topilmasa, tumanlarni tozalash
       }
-      this.localDistrict = ""; // Tuman bo'shatiladi
+      this.district = ""; // Tumanni tozalash
     },
 
-    async fetchData() {
+    async fetchData(params = {}) {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("https://trackapi.pochta.uz/api/show_photos/users/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            barcode: this.barcode,
-            fish: this.localFish,
-            region: this.localRegion,
-            district: this.localDistrict,
-            post_name: this.post_name,
-            delivery_date: this.date,
-            is_person: this.is_person,
-            page: this.currentPage,
-            page_size: this.itemsPerPage,
-          },
-        });
+        const response = await axios.get(
+          "https://trackapi.pochta.uz/api/show_photos/users/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+
+            },
+            params: {
+              barcode: params.barcode || this.barcode,
+
+              fish: params.fish || this.fish,
+
+              region: params.region || this.region,
+
+              district: params.district || this.district,
+
+              post_name: params.post_name || this.post_name,
+              delivery_date: params.date || this.date, // delivery_date parametri qo‘shildi
+              is_person: params.is_person || this.is_person, // Yangi parametr
+              page: this.currentPage,
+              page_size: this.itemsPerPage, // Bu joyda itemsPerPage qo'shiladi
+            },
+          }
+        );
         this.images = response.data.results.images;
-        this.totalPages = Math.ceil(response.data.count / this.itemsPerPage);
+        this.totalPages = Math.ceil(response.data.count / this.itemsPerPage); // itemsPerPage ni ishlatish
         this.next = response.data.next;
         this.previous = response.data.previous;
       } catch (error) {
@@ -406,7 +402,7 @@ export default {
       }
     },
     applyFilter() {
-      this.currentPage = 1;
+      this.currentPage = 1; // Filter qo'llanganda sahifani birinchiga qaytaramiz
       this.fetchData();
     },
     goToPage(page) {
@@ -421,11 +417,26 @@ export default {
     },
     closePopup() {
       this.showPopup = false;
+      this.popupData = {};
+    },
+    toggleFullScreen() {
+      const popupImage = document.querySelector(".popup-image");
+      if (popupImage.requestFullscreen) {
+        popupImage.requestFullscreen();
+      } else if (popupImage.mozRequestFullScreen) {
+        // Firefox
+        popupImage.mozRequestFullScreen();
+      } else if (popupImage.webkitRequestFullscreen) {
+        // Chrome, Safari, and Opera
+        popupImage.webkitRequestFullscreen();
+      } else if (popupImage.msRequestFullscreen) {
+        // IE/Edge
+        popupImage.msRequestFullscreen();
+      }
     },
   },
   mounted() {
-    this.updateDistricts(); // Viloyat bo'yicha tumanlarni yuklash
-    this.fetchData(); // Ma'lumotlarni yuklash
+    this.fetchData();
   },
 };
 </script>
