@@ -29,6 +29,12 @@ const routes = [
     component: DashboardPage,
     props: true,
   },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardPage,
+    props: true,
+  },
   
   {
     path: '/statistika',
