@@ -10,12 +10,7 @@ const routes = [
     name: 'Login',
     component: LoginPage, // Login sahifasiga yo'naltirish
   },
-  {
-    path: '/dashboard/:fish?', // F.I.SH uchun parametr
-    name: 'Dashboard',
-    component: DashboardPage,
-    props: true, // URL parametrlarini komponentga uzatish
-  },
+  
   {
     path: '/dashboard/:region', // Viloyat uchun parametr
     name: 'DashboardRegion',
@@ -23,11 +18,18 @@ const routes = [
     props: true,
   },
   {
-    path: '/dashboard/:region/:district', // Viloyat va tuman uchun parametr
+    path: '/dashboard/:region/:district?', // Viloyat va tuman uchun parametr
     name: 'DashboardRegionDistrict',
     component: DashboardPage,
     props: true,
   },
+  {
+    path: '/dashboard/:region/:district/:fish?',
+    name: 'Dashboard',
+    component: DashboardPage,
+    props: true,
+  },
+  
   {
     path: '/statistika',
     name: 'Statistika',

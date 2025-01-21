@@ -95,7 +95,7 @@ export default {
       localFish: this.fish || "", // Mahalliy F.I.SH
       localRegion: this.region || this.$route.params.region || "", // Mahalliy viloyat
       localDistrict: this.district || this.$route.params.district || "", // Mahalliy tuman
-
+      
       post_name: "",
       date: "",
       images: [],
@@ -111,22 +111,20 @@ export default {
     };
   },
   watch: {
-  '$route.params.region'(newRegion) {
-    this.localRegion = newRegion;
-    this.updateDistricts();
-    this.applyFilter();
+    region(newVal) {
+      this.localRegion = newVal;
+      this.updateDistricts();
+      this.applyFilter(); // Region o'zgarganda filterni qo'llash
+    },
+    district(newVal) {
+      this.localDistrict = newVal;
+      this.applyFilter(); // District o'zgarganda filterni qo'llash
+    },
+    fish(newVal) {
+      this.localFish = newVal;
+      this.applyFilter(); // F.I.SH o'zgarganda filterni qo'llash
+    },
   },
-  '$route.params.district'(newDistrict) {
-    this.localDistrict = newDistrict;
-    this.applyFilter();
-  },
-  '$route.params.fish'(newFish) {
-    this.localFish = newFish ? decodeURIComponent(newFish) : ""; // URL dekodlash
-    this.applyFilter();
-  },
-},
-
-
   methods: {
     logout() {
       localStorage.removeItem("token");
@@ -375,11 +373,6 @@ export default {
         this.districts = []; // Mintaqa topilmasa, tumanlarni tozalash
       }
       this.localDistrict = ""; // Tuman bo'shatiladi
-      if (this.$route.params.district && this.districts.includes(this.$route.params.district)) {
-        this.localDistrict = this.$route.params.district;
-      } else {
-        this.localDistrict = ""; // Yo'q bo'lsa, tumanni bo'sh qoldirish
-      }
     },
 
     async fetchData() {
@@ -440,11 +433,6 @@ export default {
   // Tumanni o'qib olish
   if (this.$route.params.district) {
     this.localDistrict = this.$route.params.district;
-  }
-
-  // F.I.SH ni o'qib olish
-  if (this.$route.params.fish) {
-    this.localFish = decodeURIComponent(this.$route.params.fish);
   }
 
   // Ma'lumotlarni yuklash

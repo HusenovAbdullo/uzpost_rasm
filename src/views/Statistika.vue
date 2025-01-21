@@ -39,7 +39,7 @@
                                 <span class="bold-text region-name">{{ fish.fish }}</span>
                                 <span class="bold-text percentage">{{ formatPercentage(fish.similarity_percentage)
                                     }}</span>
-                                <button @click.stop="viewFish(fish.fish)" class="view-button">Rasmlarni ko'rish</button>
+                                <button @click.stop="viewFish(region.region_name, district.district_name, fish.fish)" class="view-button">Rasmlarni ko'rish</button>
                             </div>
                         </div>
                     </div>
@@ -97,10 +97,11 @@ export default {
             const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}`;
             window.open(url, "_blank");
         },
-        viewFish(fishName) {
-            const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(fishName)}`;
-            window.open(url, "_blank");
-        },
+        viewFish(regionName, districtName, fishName) {
+    const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}/${encodeURIComponent(fishName)}`;
+    window.open(url, "_blank");
+},
+
     },
     async mounted() {
         try {
