@@ -75,7 +75,7 @@
       <button @click="goToPage(currentPage - 1)" :disabled="!previous" class="pag-button">
         Orqaga
       </button>
-      <span class="page-info">{{ currentPage }} ... {{ totalPages }}</span>
+      <span class="page-info" style="color: #fff;">{{ currentPage }} ... {{ totalPages }}</span>
       <button @click="goToPage(currentPage + 1)" :disabled="!next" class="pag-button">
         Oldinga
       </button>
@@ -622,7 +622,7 @@ export default {
 
 .pag-button {
   padding: 8px 12px;
-  background-color: #303294;
+  background-color: #d37e39;
   color: white;
   border: none;
   border-radius: 4px;

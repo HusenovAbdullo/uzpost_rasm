@@ -1,6 +1,9 @@
 <template>
     <div id="app" style="margin: 20px;">
-        <h1 style="color: #fff;">Statistika</h1>
+        <h1 style="color: #fff; cursor: pointer;" onclick="window.location.href='https://foto.pochta.uz/dashboard';">
+            Statistika
+        </h1>
+
         <div v-if="loading" class="loading-overlay">
             <p>Ma'lumotlar yuklanmoqda...</p>
         </div>
@@ -8,26 +11,34 @@
             <div v-for="(region, regionIndex) in sortedRegions" :key="regionIndex">
                 <div v-if="activeRegion === null || activeRegion === regionIndex" class="region"
                     @click="toggleRegion(regionIndex)">
-                    <div class="circle" :style="{ backgroundColor: getGradientColor(regionIndex, sortedRegions.length) }"></div>
+                    <div class="circle"
+                        :style="{ backgroundColor: getGradientColor(regionIndex, sortedRegions.length) }"></div>
                     <span class="bold-text region-name">{{ region.region_name }}</span>
-                    <span class="bold-text percentage">{{ formatPercentage(region.region_similarity_percentage) }}%</span>
+                    <span class="bold-text percentage">{{ formatPercentage(region.region_similarity_percentage)
+                        }}</span>
                     <button @click.stop="viewRegion(region.region_name)" class="view-button">Rasmlarni ko'rish</button>
                 </div>
                 <div v-if="activeRegion === regionIndex">
                     <div v-for="(district, districtIndex) in sortedDistricts(region)" :key="districtIndex">
                         <div v-if="activeDistrict === null || activeDistrict === districtIndex" class="district"
                             @click="toggleDistrict(districtIndex)">
-                            <div class="circle" :style="{ backgroundColor: getGradientColor(districtIndex, sortedDistricts(region).length) }"></div>
+                            <div class="circle"
+                                :style="{ backgroundColor: getGradientColor(districtIndex, sortedDistricts(region).length) }">
+                            </div>
                             <span class="bold-text region-name">{{ district.district_name }}</span>
-                            <span class="bold-text percentage">{{ formatPercentage(district.district_similarity_percentage) }}%</span>
+                            <span class="bold-text percentage">{{
+                                formatPercentage(district.district_similarity_percentage) }}</span>
                             <button @click.stop="viewDistrict(region.region_name, district.district_name)"
                                 class="view-button">Rasmlarni ko'rish</button>
                         </div>
                         <div v-if="activeDistrict === districtIndex">
                             <div v-for="(fish, fishIndex) in sortedFishes(district)" :key="fishIndex" class="fish">
-                                <div class="circle" :style="{ backgroundColor: getGradientColor(fishIndex, sortedFishes(district).length) }"></div>
+                                <div class="circle"
+                                    :style="{ backgroundColor: getGradientColor(fishIndex, sortedFishes(district).length) }">
+                                </div>
                                 <span class="bold-text region-name">{{ fish.fish }}</span>
-                                <span class="bold-text percentage">{{ formatPercentage(fish.similarity_percentage) }}%</span>
+                                <span class="bold-text percentage">{{ formatPercentage(fish.similarity_percentage)
+                                    }}</span>
                                 <button @click.stop="viewFish(fish.fish)" class="view-button">Rasmlarni ko'rish</button>
                             </div>
                         </div>
@@ -98,7 +109,7 @@ export default {
                 this.$router.push("/login");
                 return;
             }
-            const response = await fetch("http://10.100.0.28/api/region-district-fish-statistics/", {
+            const response = await fetch("https://trackapi.pochta.uz/api/region-district-fish-statistics/", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -118,9 +129,7 @@ export default {
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+
     background-color: #183e98;
 }
 
