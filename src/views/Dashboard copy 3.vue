@@ -38,11 +38,11 @@
         <input v-model="localFish" placeholder="F.I.SH" />
         <input v-model="post_name" placeholder="Aloqa bo'lim" />
         <input v-model="date" placeholder="ДД.ММ.РРРР" type="date" />
-        <!-- <select v-model="is_person">
+        <select v-model="is_person">
           <option value="">Haqiqiyligini tekshirish</option>
           <option value="True">Xato</option>
           <option value="False">To'g'ri</option>
-        </select> -->
+        </select>
         <button @click="applyFilter">Filterni qo'llash</button>
         <button @click="goToStatistics" style="background-color: green;">Statistika</button>
       </div>
@@ -51,9 +51,7 @@
     <!-- Results -->
     <div class="results">
       <div v-for="item in images" :key="item.barcode" class="image-card" @click="openPopup(item)">
-        <img :data-src="`https://trackapi.pochta.uz/${item.photo}`" class="lazyload" alt="Image" />
-
-
+        <img :src="`https://trackapi.pochta.uz/${item.photo}`" alt="Image" />
       </div>
     </div>
 
@@ -61,8 +59,7 @@
     <div v-if="showPopup" class="popup" @click.self="closePopup">
       <div class="popup-content">
         <span class="close" @click="closePopup">&times;</span>
-        <img :src="`https://trackapi.pochta.uz/${popupData.photo}`" alt="Popup Image" class="popup-image lazyload" />
-
+        <img :src="`https://trackapi.pochta.uz/${popupData.photo}`" alt="Popup Image" class="popup-image" />
         <p>Barcode: {{ popupData.barcode }}</p>
         <p>F.I.SH: {{ popupData.fish }}</p>
         <p>Viloyat: {{ popupData.region__name }}</p>
@@ -86,12 +83,8 @@
   </div>
 </template>
 
-
-
 <script>
 import axios from "axios";
-import 'lazysizes';
-
 
 export default {
   name: "DashboardPage",
@@ -688,21 +681,5 @@ p {
 .page-info {
   margin: 0 20px;
   /* Raqamlar va tugmalar o'rtasidagi bo'sh joy */
-}
-
-
-
-.image-card img {
-  width: 100%;
-  height: auto;
-}
-
-.lazyload {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.lazyloaded {
-  opacity: 1;
 }
 </style>
