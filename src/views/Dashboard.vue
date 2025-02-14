@@ -44,7 +44,7 @@
           <option value="False">To'g'ri</option>
         </select> -->
         <button @click="applyFilter">Filterni qo'llash</button>
-        <button @click="goToStatistics" style="background-color: green;">Statistika</button>
+        <button v-if="!isAdmin" @click="goToStatistics" style="background-color: green;">Statistika</button>
       </div>
     </div>
 
@@ -115,6 +115,7 @@ export default {
       itemsPerPage: 56,
       districts: [], // Tumanlar ro'yxati
       is_person: "",
+      isAdmin: false, // Adminligini tekshirish uchun
     };
   },
   watch: {
@@ -408,10 +409,12 @@ export default {
             page_size: this.itemsPerPage,
           },
         });
+
         this.images = response.data.results.images;
         this.totalPages = Math.ceil(response.data.count / this.itemsPerPage);
         this.next = response.data.next;
         this.previous = response.data.previous;
+        this.isAdmin = response.data.results.admin; // Admin qiymatini tekshirish
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.logout();
