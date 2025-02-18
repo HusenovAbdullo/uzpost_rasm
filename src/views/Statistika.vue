@@ -1,6 +1,6 @@
 <template>
     <div id="app" style="margin: 20px;">
-        <h1 style="color: #fff; cursor: pointer;" onclick="window.location.href='https://foto.pochta.uz/dashboard';">
+        <h1 style="color: #fff; cursor: pointer;" @click="goToDashboard">
             Statistika
         </h1>
 
@@ -8,38 +8,34 @@
             <p>Ma'lumotlar yuklanmoqda...</p>
         </div>
         <div v-else>
-            <div v-for="(region, regionIndex) in sortedRegions" :key="regionIndex">
-                <div v-if="activeRegion === null || activeRegion === regionIndex" class="region"
-                    @click="toggleRegion(regionIndex)">
+            <div v-for="(region, regionIndex) in sortedRegions" :key="region.id">
+                <div v-if="activeRegion === null || activeRegion === region.id" class="region"
+                    @click="toggleRegion(region.id)">
                     <div class="circle"
                         :style="{ backgroundColor: getGradientColor(regionIndex, sortedRegions.length) }"></div>
-                    <span class="bold-text region-name">{{ region.region_name }}</span>
-                    <span class="bold-text percentage">{{ formatPercentage(region.region_similarity_percentage)
-                        }}</span>
-                    <button @click.stop="viewRegion(region.region_name)" class="view-button">Rasmlarni ko'rish</button>
+                    <span class="bold-text region-name">{{ region.name }}</span>
+                    <span class="bold-text percentage">{{ formatPercentage(region.similarity_percentage) }}</span>
+                    <button @click.stop="viewRegion(region.name)" class="view-button">Rasmlarni ko'rish</button>
                 </div>
-                <div v-if="activeRegion === regionIndex">
-                    <div v-for="(district, districtIndex) in sortedDistricts(region)" :key="districtIndex">
-                        <div v-if="activeDistrict === null || activeDistrict === districtIndex" class="district"
-                            @click="toggleDistrict(districtIndex)">
+                <div v-if="activeRegion === region.id">
+                    <div v-for="(district, districtIndex) in sortedDistricts(region.id)" :key="district.id">
+                        <div v-if="activeDistrict === null || activeDistrict === district.id" class="district"
+                            @click="toggleDistrict(district.id)">
                             <div class="circle"
-                                :style="{ backgroundColor: getGradientColor(districtIndex, sortedDistricts(region).length) }">
+                                :style="{ backgroundColor: getGradientColor(districtIndex, districts[region.id]?.length || 0) }">
                             </div>
-                            <span class="bold-text region-name">{{ district.district_name }}</span>
-                            <span class="bold-text percentage">{{
-                                formatPercentage(district.district_similarity_percentage) }}</span>
-                            <button @click.stop="viewDistrict(region.region_name, district.district_name)"
-                                class="view-button">Rasmlarni ko'rish</button>
+                            <span class="bold-text region-name">{{ district.name }}</span>
+                            <span class="bold-text percentage">{{ formatPercentage(district.similarity_percentage) }}</span>
+                            <button @click.stop="viewDistrict(region.name, district.name)" class="view-button">Rasmlarni ko'rish</button>
                         </div>
-                        <div v-if="activeDistrict === districtIndex">
-                            <div v-for="(fish, fishIndex) in sortedFishes(district)" :key="fishIndex" class="fish">
+                        <div v-if="activeDistrict === district.id">
+                            <div v-for="(fish, fishIndex) in sortedFishes(district.id)" :key="fish.fish" class="fish">
                                 <div class="circle"
-                                    :style="{ backgroundColor: getGradientColor(fishIndex, sortedFishes(district).length) }">
+                                    :style="{ backgroundColor: getGradientColor(fishIndex, fishes[district.id]?.length || 0) }">
                                 </div>
                                 <span class="bold-text region-name">{{ fish.fish }}</span>
-                                <span class="bold-text percentage">{{ formatPercentage(fish.similarity_percentage)
-                                    }}</span>
-                                <button @click.stop="viewFish(region.region_name, district.district_name, fish.fish)" class="view-button">Rasmlarni ko'rish</button>
+                                <span class="bold-text percentage">{{ formatPercentage(fish.similarity_percentage) }}</span>
+                                <button @click.stop="viewFish(region.name, district.name, fish.fish)" class="view-button">Rasmlarni ko'rish</button>
                             </div>
                         </div>
                     </div>
@@ -51,10 +47,12 @@
 
 <script>
 export default {
-    name: "RegionStatistics",
+    name: 'RegionStatistics',
     data() {
         return {
-            data: [],
+            regions: [],
+            districts: {},
+            fishes: {},
             loading: true,
             activeRegion: null,
             activeDistrict: null,
@@ -62,18 +60,38 @@ export default {
     },
     computed: {
         sortedRegions() {
-            return Array.isArray(this.data) ? [...this.data].sort((a, b) => a.region_similarity_percentage - b.region_similarity_percentage) : [];
-        },
+            return [...this.regions].sort((a, b) => a.similarity_percentage - b.similarity_percentage);
+        }
     },
     methods: {
-        sortedDistricts(region) {
-            return Array.isArray(region.districts) ? [...region.districts].sort((a, b) => a.district_similarity_percentage - b.district_similarity_percentage) : [];
+        async fetchDistricts(regionId) {
+            if (!this.districts[regionId]) {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`https://trackapi.pochta.uz/api/region/${regionId}/districts/`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const data = await response.json();
+                this.districts[regionId] = data;
+            }
         },
-        sortedFishes(district) {
-            return Array.isArray(district.fishes) ? [...district.fishes].sort((a, b) => a.similarity_percentage - b.similarity_percentage) : [];
+        async fetchFishes(districtId) {
+            if (!this.fishes[districtId]) {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`https://trackapi.pochta.uz/api/district/${districtId}/fish-with-similarity/`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const data = await response.json();
+                this.fishes[districtId] = data;
+            }
+        },
+        sortedDistricts(regionId) {
+            return this.districts[regionId] ? [...this.districts[regionId]].sort((a, b) => a.similarity_percentage - b.similarity_percentage) : [];
+        },
+        sortedFishes(districtId) {
+            return this.fishes[districtId] ? [...this.fishes[districtId]].sort((a, b) => a.similarity_percentage - b.similarity_percentage) : [];
         },
         formatPercentage(value) {
-            return `${value.toFixed(3)} %`; // Foizni x.xxx formatda ko‘rsatish
+            return `${value.toFixed(3)} %`;
         },
         getGradientColor(index, totalItems) {
             const green = [0, 255, 0];
@@ -82,51 +100,99 @@ export default {
             const color = green.map((g, i) => Math.round(g + (red[i] - g) * ratio));
             return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
         },
-        toggleRegion(regionIndex) {
-            this.activeRegion = this.activeRegion === regionIndex ? null : regionIndex;
-            this.activeDistrict = null;
+        async toggleRegion(regionId) {
+            if (this.activeRegion === regionId) {
+                this.activeRegion = null;
+                this.activeDistrict = null;
+            } else {
+                this.activeRegion = regionId;
+                this.activeDistrict = null;
+                await this.fetchDistricts(regionId);
+            }
         },
-        toggleDistrict(districtIndex) {
-            this.activeDistrict = this.activeDistrict === districtIndex ? null : districtIndex;
+        async toggleDistrict(districtId) {
+            if (this.activeDistrict === districtId) {
+                this.activeDistrict = null;
+            } else {
+                this.activeDistrict = districtId;
+                await this.fetchFishes(districtId);
+            }
         },
         viewRegion(regionName) {
-            const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}`;
-            window.open(url, "_blank");
+            window.open(`https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}`, '_blank');
         },
         viewDistrict(regionName, districtName) {
-            const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}`;
-            window.open(url, "_blank");
+            window.open(`https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}`, '_blank');
         },
         viewFish(regionName, districtName, fishName) {
-    const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}/${encodeURIComponent(fishName)}`;
-    window.open(url, "_blank");
-},
-
+            window.open(`https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}/${encodeURIComponent(fishName)}`, '_blank');
+        },
+        goToDashboard() {
+            window.location.href = 'https://foto.pochta.uz/dashboard';
+        }
     },
     async mounted() {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                this.$router.push("/login");
-                return;
-            }
-            const response = await fetch("https://trackapi.pochta.uz/api/region-district-fish-statistics/", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const token = localStorage.getItem('token');
+            const response = await fetch('https://trackapi.pochta.uz/api/regions/', {
+                headers: { Authorization: `Bearer ${token}` },
             });
-            if (!response.ok) {
-                throw new Error("Failed to fetch data");
-            }
-            this.data = await response.json();
+            this.regions = await response.json();
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error('Error fetching regions:', error);
         } finally {
             this.loading = false;
         }
     },
 };
 </script>
+
+<style scoped>
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    z-index: 1000;
+}
+
+.region, .district, .fish {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.view-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.view-button:hover {
+    background-color: #0056b3;
+}
+</style>
+
 
 <style>
 body {

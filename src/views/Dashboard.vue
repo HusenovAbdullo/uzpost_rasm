@@ -44,7 +44,7 @@
           <option value="False">To'g'ri</option>
         </select> -->
         <button @click="applyFilter">Filterni qo'llash</button>
-        <button v-if="!isAdmin" @click="goToStatistics" style="background-color: green;">Statistika</button>
+        <button @click="goToStatistics" style="background-color: green;">Statistika</button>
       </div>
     </div>
 
@@ -115,7 +115,7 @@ export default {
       itemsPerPage: 56,
       districts: [], // Tumanlar ro'yxati
       is_person: "",
-      isAdmin: false, // Adminligini tekshirish uchun
+      isAdmin: true, // Adminligini tekshirish uchun
     };
   },
   watch: {

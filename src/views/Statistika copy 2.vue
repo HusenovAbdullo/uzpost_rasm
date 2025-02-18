@@ -1,6 +1,9 @@
 <template>
     <div id="app" style="margin: 20px;">
-        <h1 style="color: #fff;">Region Statistics</h1>
+        <h1 style="color: #fff; cursor: pointer;" onclick="window.location.href='https://foto.pochta.uz/dashboard';">
+            Statistika
+        </h1>
+
         <div v-if="loading" class="loading-overlay">
             <p>Ma'lumotlar yuklanmoqda...</p>
         </div>
@@ -8,27 +11,35 @@
             <div v-for="(region, regionIndex) in sortedRegions" :key="regionIndex">
                 <div v-if="activeRegion === null || activeRegion === regionIndex" class="region"
                     @click="toggleRegion(regionIndex)">
-                    <div class="circle" :style="{ backgroundColor: getGradientColor(regionIndex, sortedRegions.length) }"></div>
-                    <span class="bold-text">{{ region.region_name }}</span>
-                    <span class="bold-text">{{ formatPercentage(region.region_similarity_percentage) }}%</span>
+                    <div class="circle"
+                        :style="{ backgroundColor: getGradientColor(regionIndex, sortedRegions.length) }"></div>
+                    <span class="bold-text region-name">{{ region.region_name }}</span>
+                    <span class="bold-text percentage">{{ formatPercentage(region.region_similarity_percentage)
+                        }}</span>
                     <button @click.stop="viewRegion(region.region_name)" class="view-button">Rasmlarni ko'rish</button>
                 </div>
                 <div v-if="activeRegion === regionIndex">
                     <div v-for="(district, districtIndex) in sortedDistricts(region)" :key="districtIndex">
                         <div v-if="activeDistrict === null || activeDistrict === districtIndex" class="district"
                             @click="toggleDistrict(districtIndex)">
-                            <div class="circle" :style="{ backgroundColor: getGradientColor(districtIndex, sortedDistricts(region).length) }"></div>
-                            <span class="bold-text">{{ district.district_name }}</span>
-                            <span class="bold-text">{{ formatPercentage(district.district_similarity_percentage) }}%</span>
+                            <div class="circle"
+                                :style="{ backgroundColor: getGradientColor(districtIndex, sortedDistricts(region).length) }">
+                            </div>
+                            <span class="bold-text region-name">{{ district.district_name }}</span>
+                            <span class="bold-text percentage">{{
+                                formatPercentage(district.district_similarity_percentage) }}</span>
                             <button @click.stop="viewDistrict(region.region_name, district.district_name)"
                                 class="view-button">Rasmlarni ko'rish</button>
                         </div>
                         <div v-if="activeDistrict === districtIndex">
                             <div v-for="(fish, fishIndex) in sortedFishes(district)" :key="fishIndex" class="fish">
-                                <div class="circle" :style="{ backgroundColor: getGradientColor(fishIndex, sortedFishes(district).length) }"></div>
-                                <span class="bold-text">{{ fish.fish }}</span>
-                                <span class="bold-text">{{ formatPercentage(fish.similarity_percentage) }}%</span>
-                                <button @click.stop="viewFish(fish.fish)" class="view-button">Rasmlarni ko'rish</button>
+                                <div class="circle"
+                                    :style="{ backgroundColor: getGradientColor(fishIndex, sortedFishes(district).length) }">
+                                </div>
+                                <span class="bold-text region-name">{{ fish.fish }}</span>
+                                <span class="bold-text percentage">{{ formatPercentage(fish.similarity_percentage)
+                                    }}</span>
+                                <button @click.stop="viewFish(region.region_name, district.district_name, fish.fish)" class="view-button">Rasmlarni ko'rish</button>
                             </div>
                         </div>
                     </div>
@@ -86,10 +97,11 @@ export default {
             const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}`;
             window.open(url, "_blank");
         },
-        viewFish(fishName) {
-            const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(fishName)}`;
-            window.open(url, "_blank");
-        },
+        viewFish(regionName, districtName, fishName) {
+    const url = `https://foto.pochta.uz/dashboard/${encodeURIComponent(regionName)}/${encodeURIComponent(districtName)}/${encodeURIComponent(fishName)}`;
+    window.open(url, "_blank");
+},
+
     },
     async mounted() {
         try {
@@ -98,7 +110,7 @@ export default {
                 this.$router.push("/login");
                 return;
             }
-            const response = await fetch("http://10.100.0.28/api/region-district-fish-statistics/", {
+            const response = await fetch("https://trackapi.pochta.uz/api/region-district-fish-statistics/", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -118,9 +130,7 @@ export default {
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+
     background-color: #183e98;
 }
 
@@ -144,6 +154,18 @@ body {
     color: #ffffff;
 }
 
+.region-name {
+    /* margin-left: -750px; */
+    flex: 1;
+    text-align: left;
+}
+
+.percentage {
+    margin-left: 10px;
+    text-align: left;
+    flex-basis: 80px;
+}
+
 .circle {
     width: 20px;
     height: 20px;
@@ -158,7 +180,7 @@ body {
     padding: 5px 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #183e98;
     color: white;
     font-size: 12px;
     cursor: pointer;
