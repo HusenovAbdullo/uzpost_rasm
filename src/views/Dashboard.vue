@@ -70,6 +70,7 @@
         <p>Sana: {{ popupData.delivery_date }}</p>
         <p>Aloqa bo'lim: {{ popupData.post_name }}</p>
         <p>Oluvchi manzili: {{ popupData.street_name }}</p>
+        <a :href="`https://yandex.uz/maps/?pt=${popupData.lon},${popupData.lat}&z=15`" target="_blank">Yetkazilgan manzilni ko'rish</a>
       </div>
     </div>
 
