@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from '../views/Login.vue';
 import DashboardPage from '../views/Dashboard.vue';
 import StatistikaVue from '@/views/Statistika.vue';
+import Statistika1Vue from '@/views/Statistika1.vue';
+import Statistika2Vue from '@/views/Statistika2.vue';
 import Dashboard1Vue from '@/views/Dashboard1.vue';
 
 // JWT exp ni tekshirish uchun oddiy helper
@@ -39,6 +41,10 @@ const routes = [
 
   // Statistika ham himoyalangan
   { path: '/statistika', name: 'Statistika', component: StatistikaVue, meta: { requiresAuth: true } },
+
+  { path: '/statistika1', name: 'Statistika1', component: Statistika1Vue, meta: { requiresAuth: true } },
+
+  { path: '/statistika2', name: 'Statistika2', component: Statistika2Vue, meta: { requiresAuth: true } },
 
   // Qo‘shimcha ko‘rinish
   { path: '/dashboard1/:fish?/:region?/:district?', name: 'Dashboard1', component: Dashboard1Vue, props: true, meta: { requiresAuth: true } },

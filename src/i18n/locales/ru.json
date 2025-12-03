@@ -1,0 +1,154 @@
+{
+    "app": {
+      "title": "СИСТЕМА КОНТРОЛЯ ВРУЧЕНИЯ ГИБРИДНЫХ ПИСЕМ",
+      "admin": "Админ",
+      "developer": "Разработчик",
+      "developerTooltip": "Открыть в Telegram",
+      "developerLabel": "Разработчик:"
+    },
+    "buttons": {
+      "statistics": "Статистика",
+      "logout": "Выход",
+      "applyFilters": "Применить фильтры",
+      "clear": "Очистить",
+      "clearFilters": "Сбросить фильтры",
+      "refresh": "Обновить",
+      "prev": "Назад",
+      "next": "Вперёд",
+      "copy": "Копировать",
+      "dashboard": "Дашборд"
+    },
+    "filters": {
+      "title": "Фильтры",
+      "region": "Область",
+      "allRegions": "Все области",
+      "district": "Район",
+      "allDistricts": "Все районы",
+      "barcode": "Штрих-код",
+      "barcodePlaceholder": "Штрих-код",
+      "fish": "Ф.И.О.",
+      "fishPlaceholder": "Ф.И.О.",
+      "post": "Почтовое отделение",
+      "postPlaceholder": "Почтовое отделение",
+      "date": "Дата",
+      "person": "Распознавание",
+      "personAll": "Все",
+      "personTrue": "Распознан",
+      "personFalse": "Не распознан"
+    },
+    "sidebar": {
+      "summaryTitle": "Общая информация",
+      "totalRecords": "Всего записей:",
+      "page": "Страница:"
+    },
+    "toolbar": {
+      "results": "Результаты",
+      "pageShort": "Страница",
+      "recordsShort": "записей"
+    },
+    "states": {
+      "loading": "Данные загружаются...",
+      "noResults": "По выбранным фильтрам ничего не найдено."
+    },
+    "card": {
+      "imageAlt": "Изображение",
+      "moreTooltip": "Показать полную информацию",
+      "noBarcode": "Штрих-код не указан"
+    },
+    "modal": {
+      "title": "Информация по изображению",
+      "loading": "Данные загружаются...",
+      "postLabel": "Почтовое отделение",
+      "addressLabel": "Адрес получателя"
+    },
+    "map": {
+      "viewOnMap": "Посмотреть на карте",
+      "deliveredAddressAlt": "Посмотреть адрес доставки на карте"
+    },
+    "stats": {
+      "title": "Статистика фейковых фотографий",
+  
+      "modeTitle": "Режим статистики",
+      "modeSubtitle": "Пожалуйста, выберите тип показателя:",
+      "similarityButton": "Процент сходства",
+      "fakeButton": "Процент фейковых фото",
+  
+      "fakeTitle": "Статистика по проценту фейковых фото",
+      "similarityTitle": "Статистика по проценту сходства",
+  
+      "listHeaderSimilarity": "Регионы, районы и Ф.И.О отсортированы по проценту сходства сверху вниз (больше → меньше).",
+      "listHeaderFake": "Регионы, районы и Ф.И.О отсортированы по проценту фейковых фото сверху вниз (больше → меньше).",
+  
+      "legendGood": "Низкий процент — хорошая ситуация",
+      "legendBad": "Высокий процент — много проблем",
+      "legendHint": "Список всегда отсортирован от высокого процента к низкому.",
+  
+      "empty": "По выбранному режиму данные не найдены.",
+  
+      "toolbar": {
+        "totalRegions": "Всего областей",
+        "loadedDistricts": "Загружено районов",
+        "loadedFishes": "Загружено Ф.И.О."
+      },
+  
+      "summaryTitle": "Краткая сводка",
+      "summaryMode": "Режим",
+      "summaryRegionsCount": "Количество областей",
+      "summaryCurrentRegion": "Текущий регион",
+      "summaryCurrentDistrict": "Текущий район",
+  
+      "sidebar": {
+        "title": "Статистика",
+        "collapseAll": "Свернуть всё",
+        "description": "Ниже области отсортированы по проценту фейковых фото сверху вниз (много → мало).",
+        "gradientTitle": "Значение цветов:",
+        "legendHigh": "Высокий процент (много фейковых фото) — красный",
+        "legendMedium": "Средний — жёлтый",
+        "legendLow": "Низкий процент (мало фейковых фото) — зелёный",
+        "summaryTitle": "Краткая сводка",
+        "totalRegions": "Областей:",
+        "loadedDistricts": "Загружено районов:",
+        "loadedFishes": "Загружено Ф.И.О.:",
+        "actionsTitle": "Действия",
+        "expandAllRegions": "Открыть все области"
+      },
+  
+      "metricRegionFake": "Процент фейковых фото по области",
+      "metricRegionSimilarity": "Процент сходства по области",
+      "metricDistrictFake": "Процент фейковых фото по району",
+      "metricDistrictSimilarity": "Процент сходства по району",
+      "metricFishFake": "Процент фейковых фото по Ф.И.О.",
+      "metricFishSimilarity": "Процент сходства по Ф.И.О.",
+  
+      "labels": {
+        "fakePercent": "Процент фейка",
+        "similarity": "Сходство"
+      },
+  
+      "btnViewAll": "Показать фото",
+      "btnViewAllShort": "Все",
+      "btnViewRealShort": "Реальные",
+      "btnViewFakeShort": "Фейковые",
+  
+      "buttons": {
+        "viewAll": "Все фото",
+        "viewReal": "Реальные фото",
+        "viewFake": "Фейковые фото",
+        "openDistricts": "Показать районы",
+        "openFishes": "Показать Ф.И.О.",
+        "close": "Скрыть"
+      },
+  
+      "states": {
+        "noRegions": "Данные не найдены. Пожалуйста, проверьте токен или настройки API.",
+        "noDistricts": "Данные по районам загружаются или не найдены.",
+        "noFishes": "Данные по Ф.И.О. загружаются или не найдены."
+      },
+  
+      "modes": {
+        "fake": "Процент фейковых фото",
+        "similarity": "Процент сходства"
+      }
+    }
+  }
+  

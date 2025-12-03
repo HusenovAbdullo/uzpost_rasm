@@ -1,0 +1,154 @@
+{
+    "app": {
+      "title": "GIBRID XATLARINI TOPSHIRILISHINI NAZORAT QILISH DASTURI",
+      "admin": "Admin",
+      "developer": "Dasturchi",
+      "developerTooltip": "Telegramda ochish",
+      "developerLabel": "Dasturchi:"
+    },
+    "buttons": {
+      "statistics": "Statistika",
+      "logout": "Chiqish",
+      "applyFilters": "Filterni qo‘llash",
+      "clear": "Tozalash",
+      "clearFilters": "Filtrlarni tozalash",
+      "refresh": "Yangilash",
+      "prev": "Orqaga",
+      "next": "Oldinga",
+      "copy": "Nusxa olish",
+      "dashboard": "Dashboard"
+    },
+    "filters": {
+      "title": "Filtrlar",
+      "region": "Viloyat",
+      "allRegions": "Barcha viloyatlar",
+      "district": "Tuman",
+      "allDistricts": "Barcha tumanlar",
+      "barcode": "Barcode",
+      "barcodePlaceholder": "Barcode",
+      "fish": "F.I.SH",
+      "fishPlaceholder": "F.I.SH",
+      "post": "Aloqa bo‘lim",
+      "postPlaceholder": "Aloqa bo‘lim",
+      "date": "Sana",
+      "person": "Haqiqiylik",
+      "personAll": "Barchasi",
+      "personTrue": "Haqiqiy",
+      "personFalse": "Haqiqiy emas"
+    },
+    "sidebar": {
+      "summaryTitle": "Umumiy ma’lumot",
+      "totalRecords": "Jami yozuvlar:",
+      "page": "Sahifa:"
+    },
+    "toolbar": {
+      "results": "Natijalar",
+      "pageShort": "Sahifa",
+      "recordsShort": "ta yozuv"
+    },
+    "states": {
+      "loading": "Ma’lumotlar yuklanmoqda...",
+      "noResults": "Tanlangan filtrlar bo‘yicha hech qanday rasm topilmadi."
+    },
+    "card": {
+      "imageAlt": "Rasm",
+      "moreTooltip": "To‘liq ma’lumotni ko‘rish",
+      "noBarcode": "Barcode ko‘rsatilmagan"
+    },
+    "modal": {
+      "title": "Rasm ma’lumotlari",
+      "loading": "Ma’lumotlar yuklanmoqda...",
+      "postLabel": "Aloqa bo‘lim",
+      "addressLabel": "Oluvchi manzili"
+    },
+    "map": {
+      "viewOnMap": "Xaritada ko‘rish",
+      "deliveredAddressAlt": "Yetkazilgan manzilni xaritada ko‘rish"
+    },
+    "stats": {
+      "title": "Soxta rasm statistikasi",
+  
+      "modeTitle": "Statistika rejimi",
+      "modeSubtitle": "Iltimos, ko‘rsatkich turini tanlang:",
+      "similarityButton": "O‘xshashlik foizi",
+      "fakeButton": "Soxta rasm foizi",
+  
+      "fakeTitle": "Soxta rasm foizi bo‘yicha statistika",
+      "similarityTitle": "O‘xshashlik foizi bo‘yicha statistika",
+  
+      "listHeaderSimilarity": "Viloyatlar, tumanlar va F.I.SH lar o‘xshashlik foizi bo‘yicha yuqoridan pastga tartiblangan.",
+      "listHeaderFake": "Viloyatlar, tumanlar va F.I.SH lar soxta rasm foizi bo‘yicha yuqoridan pastga tartiblangan.",
+  
+      "legendGood": "Past foiz — yaxshi holat",
+      "legendBad": "Yuqori foiz — muammo ko‘p",
+      "legendHint": "Ro‘yxat har doim yuqori foizdan past foizga qarab tartiblanadi.",
+  
+      "empty": "Tanlangan rejim bo‘yicha ma’lumot topilmadi.",
+  
+      "toolbar": {
+        "totalRegions": "Jami viloyatlar",
+        "loadedDistricts": "Yuklangan tumanlar",
+        "loadedFishes": "Yuklangan F.I.SH"
+      },
+  
+      "summaryTitle": "Qisqa ma’lumot",
+      "summaryMode": "Rejim",
+      "summaryRegionsCount": "Viloyatlar soni",
+      "summaryCurrentRegion": "Joriy viloyat",
+      "summaryCurrentDistrict": "Joriy tuman",
+  
+      "sidebar": {
+        "title": "Statistika",
+        "collapseAll": "Hammasini yopish",
+        "description": "Quyidagi ro‘yxatda viloyatlar soxta rasm foizi bo‘yicha yuqoridan pastga tartiblangan (ko‘p → kam).",
+        "gradientTitle": "Ranglar ma’nosi:",
+        "legendHigh": "Foizi yuqori (ko‘p soxta rasm) – qizil",
+        "legendMedium": "O‘rtacha – sariq",
+        "legendLow": "Foizi past (kam soxta rasm) – yashil",
+        "summaryTitle": "Qisqa ma’lumot",
+        "totalRegions": "Viloyatlar:",
+        "loadedDistricts": "Yuklangan tumanlar:",
+        "loadedFishes": "Yuklangan F.I.SH:",
+        "actionsTitle": "Harakatlar",
+        "expandAllRegions": "Barcha viloyatni ochish"
+      },
+  
+      "metricRegionFake": "Viloyat bo‘yicha soxta rasm foizi",
+      "metricRegionSimilarity": "Viloyat bo‘yicha o‘xshashlik foizi",
+      "metricDistrictFake": "Tuman bo‘yicha soxta rasm foizi",
+      "metricDistrictSimilarity": "Tuman bo‘yicha o‘xshashlik foizi",
+      "metricFishFake": "F.I.SH bo‘yicha soxta rasm foizi",
+      "metricFishSimilarity": "F.I.SH bo‘yicha o‘xshashlik foizi",
+  
+      "labels": {
+        "fakePercent": "Soxta foiz",
+        "similarity": "O‘xshashlik"
+      },
+  
+      "btnViewAll": "Rasmlarni ko‘rish",
+      "btnViewAllShort": "Umumiy",
+      "btnViewRealShort": "Real rasmlar",
+      "btnViewFakeShort": "Soxta rasmlar",
+  
+      "buttons": {
+        "viewAll": "Umumiy",
+        "viewReal": "Real rasmlar",
+        "viewFake": "Soxta rasmlar",
+        "openDistricts": "Tumanlarni ko‘rish",
+        "openFishes": "F.I.SH larni ko‘rish",
+        "close": "Yopish"
+      },
+  
+      "states": {
+        "noRegions": "Ma’lumot topilmadi. Iltimos, token yoki API sozlamalarini tekshiring.",
+        "noDistricts": "Tuman ma’lumotlari yuklanmoqda yoki topilmadi.",
+        "noFishes": "F.I.SH ma’lumotlari yuklanmoqda yoki topilmadi."
+      },
+  
+      "modes": {
+        "fake": "Soxta rasm foizi",
+        "similarity": "O‘xshashlik foizi"
+      }
+    }
+  }
+  

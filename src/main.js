@@ -1,7 +1,10 @@
+// src/main.js
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router"; // Routerni import qilish
+import router from "./router";
+import i18n from "./i18n";
 
-const app = createApp(App); // App ni yaratish
-app.use(router); // Routerni qo'shish
-app.mount("#app"); // Appni mount qilish
+createApp(App)
+  .use(router)
+  .use(i18n)
+  .mount("#app");

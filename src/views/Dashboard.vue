@@ -4,16 +4,37 @@
     <header class="appbar">
       <div class="appbar__inner">
         <div class="appbar__left">
-          <h1 class="appbar__title" title="GIBRID XATLARINI TOPSHIRILISHINI NAZORAT QILISH DASTURI">
-            GIBRID XATLARINI TOPSHIRILISHINI NAZORAT QILISH DASTURI
+          <h1
+            class="appbar__title"
+            :title="$t('app.title')"
+          >
+            {{ $t('app.title') }}
           </h1>
-          <span v-if="isAdmin" class="badge badge--admin">Admin</span>
+          <span v-if="isAdmin" class="badge badge--admin">
+            {{ $t('app.admin') }}
+          </span>
         </div>
         <div class="appbar__right">
+          <!-- Til switcher -->
+          <div class="lang-switch">
+            <button
+              v-for="lng in locales"
+              :key="lng"
+              type="button"
+              class="lang-btn"
+              :class="{ 'lang-btn--active': currentLocale === lng }"
+              @click="changeLocale(lng)"
+            >
+              {{ lng.toUpperCase() }}
+            </button>
+          </div>
+
           <button class="btn btn--ghost" @click="goToStatistics">
-            Statistika
+            {{ $t('buttons.statistics') }}
           </button>
-          <button class="btn btn--danger" @click="logout">Chiqish</button>
+          <button class="btn btn--danger" @click="logout">
+            {{ $t('buttons.logout') }}
+          </button>
         </div>
       </div>
     </header>
@@ -24,16 +45,16 @@
       <aside class="sidebar">
         <div class="sidebar__section">
           <div class="sidebar__header">
-            <h2>Filtrlar</h2>
+            <h2>{{ $t('filters.title') }}</h2>
             <button class="link-button" type="button" @click="resetFilters">
-              Tozalash
+              {{ $t('buttons.clear') }}
             </button>
           </div>
 
           <div class="form-group">
-            <label>Viloyat</label>
+            <label>{{ $t('filters.region') }}</label>
             <select v-model="localRegion" @change="updateDistricts">
-              <option value="">Barcha viloyatlar</option>
+              <option value="">{{ $t('filters.allRegions') }}</option>
               <option value="Toshkent shahar">Toshkent shahar</option>
               <option value="Surxondaryo">Surxondaryo</option>
               <option value="Samarqand">Samarqand</option>
@@ -54,9 +75,9 @@
           </div>
 
           <div class="form-group">
-            <label>Tuman</label>
+            <label>{{ $t('filters.district') }}</label>
             <select v-model="localDistrict">
-              <option value="">Barcha tumanlar</option>
+              <option value="">{{ $t('filters.allDistricts') }}</option>
               <option v-for="d in districts" :key="d" :value="d">
                 {{ d }}
               </option>
@@ -64,66 +85,80 @@
           </div>
 
           <div class="form-group">
-            <label>Barcode</label>
-            <input v-model="barcode" placeholder="Barcode" @keyup.enter="applyFilter" />
+            <label>{{ $t('filters.barcode') }}</label>
+            <input
+              v-model="barcode"
+              :placeholder="$t('filters.barcodePlaceholder')"
+              @keyup.enter="applyFilter"
+            />
           </div>
 
           <div class="form-group">
-            <label>F.I.SH</label>
-            <input v-model="localFish" placeholder="F.I.SH" @keyup.enter="applyFilter" />
+            <label>{{ $t('filters.fish') }}</label>
+            <input
+              v-model="localFish"
+              :placeholder="$t('filters.fishPlaceholder')"
+              @keyup.enter="applyFilter"
+            />
           </div>
 
           <div class="form-group">
-            <label>Aloqa bo‘lim</label>
-            <input v-model="post_name" placeholder="Aloqa bo'lim" @keyup.enter="applyFilter" />
+            <label>{{ $t('filters.post') }}</label>
+            <input
+              v-model="post_name"
+              :placeholder="$t('filters.postPlaceholder')"
+              @keyup.enter="applyFilter"
+            />
           </div>
 
           <div class="form-group">
-            <label>Sana</label>
+            <label>{{ $t('filters.date') }}</label>
             <input v-model="date" type="date" />
           </div>
 
-          <!-- Haqiqiylik filtri kerak bo‘lsa qayta yoqasiz
+          <!-- is_person filtri -->
           <div class="form-group">
-            <label>Haqiqiylik</label>
+            <label>{{ $t('filters.person') }}</label>
             <select v-model="is_person">
-              <option value="">Barchasi</option>
-              <option value="True">Xato</option>
-              <option value="False">To'g'ri</option>
+              <option value="">{{ $t('filters.personAll') }}</option>
+              <option value="true">{{ $t('filters.personTrue') }}</option>
+              <option value="false">{{ $t('filters.personFalse') }}</option>
             </select>
           </div>
-          -->
 
           <div class="sidebar__actions">
             <button class="btn btn--primary" type="button" @click="applyFilter">
-              Filterni qo‘llash
+              {{ $t('buttons.applyFilters') }}
             </button>
           </div>
         </div>
 
         <div class="sidebar__section sidebar__section--stats">
-          <h3>Umumiy ma’lumot</h3>
+          <h3>{{ $t('sidebar.summaryTitle') }}</h3>
           <p>
-            Jami yozuvlar:
+            {{ $t('sidebar.totalRecords') }}
             <strong>{{ totalCount || (loading ? "..." : images.length) }}</strong>
           </p>
-          <p>Sahifa: <strong>{{ currentPage }} / {{ totalPages }}</strong></p>
+          <p>
+            {{ $t('sidebar.page') }}
+            <strong>{{ currentPage }} / {{ totalPages }}</strong>
+          </p>
         </div>
-        <div class="sidebar__footer">
-  <small>
-    Dasturchi:
-    <a
-      href="https://t.me/Husenov_Abdullo"
-      target="_blank"
-      rel="noopener"
-      class="devlink"
-      title="Telegramda ochish"
-    >
-      Husenov Abdullo
-    </a>
-  </small>
-</div>
 
+        <div class="sidebar__footer">
+          <small>
+            {{ $t('app.developer') }}:
+            <a
+              href="https://t.me/Husenov_Abdullo"
+              target="_blank"
+              rel="noopener"
+              class="devlink"
+              title="Telegramda ochish"
+            >
+              Husenov Abdullo
+            </a>
+          </small>
+        </div>
       </aside>
 
       <!-- Main Content -->
@@ -131,30 +166,57 @@
         <!-- Toolbar -->
         <div class="content__toolbar">
           <div class="content__toolbar-left">
-            <span class="toolbar__title">Natijalar</span>
+            <span class="toolbar__title">{{ $t('toolbar.results') }}</span>
             <span class="toolbar__meta">
-              Sahifa {{ currentPage }} / {{ totalPages }}
-              <span v-if="totalCount"> · {{ totalCount }} ta yozuv</span>
+              {{ $t('toolbar.pageShort') }} {{ currentPage }} / {{ totalPages }}
+              <span v-if="totalCount">
+                · {{ totalCount }} {{ $t('toolbar.recordsShort') }}
+              </span>
             </span>
           </div>
           <div class="content__toolbar-right">
-            <button class="btn btn--ghost" type="button" :disabled="loading" @click="fetchData">
-              Yangilash
+            <button
+              class="btn btn--ghost"
+              type="button"
+              :disabled="loading"
+              @click="fetchData"
+            >
+              {{ $t('buttons.refresh') }}
             </button>
             <div class="pagination pagination--top">
-              <button class="pag-button" type="button" @click="goToPage(1)" :disabled="!hasPrev || loading">
+              <button
+                class="pag-button"
+                type="button"
+                @click="goToPage(1)"
+                :disabled="!hasPrev || loading"
+              >
                 «
               </button>
-              <button class="pag-button" type="button" @click="goToPage(currentPage - 1)"
-                :disabled="!hasPrev || loading">
-                Orqaga
+              <button
+                class="pag-button"
+                type="button"
+                @click="goToPage(currentPage - 1)"
+                :disabled="!hasPrev || loading"
+              >
+                {{ $t('buttons.prev') }}
               </button>
-              <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-              <button class="pag-button" type="button" @click="goToPage(currentPage + 1)"
-                :disabled="!hasNext || loading">
-                Oldinga
+              <span class="page-info">
+                {{ currentPage }} / {{ totalPages }}
+              </span>
+              <button
+                class="pag-button"
+                type="button"
+                @click="goToPage(currentPage + 1)"
+                :disabled="!hasNext || loading"
+              >
+                {{ $t('buttons.next') }}
               </button>
-              <button class="pag-button" type="button" @click="goToPage(totalPages)" :disabled="!hasNext || loading">
+              <button
+                class="pag-button"
+                type="button"
+                @click="goToPage(totalPages)"
+                :disabled="!hasNext || loading"
+              >
                 »
               </button>
             </div>
@@ -164,37 +226,59 @@
         <!-- Loading / Empty / Grid -->
         <div v-if="loading" class="content__state content__state--loading">
           <div class="spinner"></div>
-          <p>Ma’lumotlar yuklanmoqda...</p>
+          <p>{{ $t('states.loading') }}</p>
         </div>
 
-        <div v-else-if="!loading && images.length === 0" class="content__state content__state--empty">
-          <p>Tanlangan filtrlar bo‘yicha hech qanday rasm topilmadi.</p>
-          <button class="btn btn--ghost" type="button" @click="resetFilters">
-            Filtrlarni tozalash
+        <div
+          v-else-if="!loading && images.length === 0"
+          class="content__state content__state--empty"
+        >
+          <p>{{ $t('states.noResults') }}</p>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            @click="resetFilters"
+          >
+            {{ $t('buttons.clearFilters') }}
           </button>
         </div>
 
         <div v-else class="grid">
-          <article v-for="item in images" :key="item.id" class="card" @click="openPopup(item)"
-            :title="item.barcode || 'To‘liq ma’lumotni ko‘rish'">
+          <article
+            v-for="item in images"
+            :key="item.id"
+            class="card"
+            @click="openPopup(item)"
+            :title="item.barcode || $t('card.moreTooltip')"
+          >
             <div class="card__thumb">
-              <img class="card__image" :src="normalizePhoto(item.photo)" loading="lazy" alt="Rasm"
-                @error="onImgError($event)" />
+              <img
+                class="card__image"
+                :src="normalizePhoto(item.photo)"
+                loading="lazy"
+                :alt="$t('card.imageAlt')"
+                @error="onImgError($event)"
+              />
               <div class="card__badge" v-if="item.delivery_date">
                 {{ formatDate(item.delivery_date) }}
               </div>
             </div>
             <div class="card__body">
               <p class="card__barcode">
-                {{ item.barcode || "Barcode ko‘rsatilmagan" }}
+                {{ item.barcode ? item.barcode : $t('card.noBarcode') }}
               </p>
               <p class="card__fish" v-if="item.fish">
                 {{ item.fish }}
               </p>
-              <p class="card__location" v-if="item.region_name || item.district_name">
+              <p
+                class="card__location"
+                v-if="item.region_name || item.district_name"
+              >
                 <span v-if="item.region_name">{{ item.region_name }}</span>
                 <span v-if="item.region_name && item.district_name"> / </span>
-                <span v-if="item.district_name">{{ item.district_name }}</span>
+                <span v-if="item.district_name">
+                  {{ item.district_name }}
+                </span>
               </p>
               <p class="card__post" v-if="item.post_name">
                 {{ item.post_name }}
@@ -205,12 +289,22 @@
 
         <!-- Bottom Pagination -->
         <div class="pagination pagination--bottom">
-          <button class="pag-button" type="button" @click="goToPage(currentPage - 1)" :disabled="!hasPrev || loading">
-            Orqaga
+          <button
+            class="pag-button"
+            type="button"
+            @click="goToPage(currentPage - 1)"
+            :disabled="!hasPrev || loading"
+          >
+            {{ $t('buttons.prev') }}
           </button>
           <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-          <button class="pag-button" type="button" @click="goToPage(currentPage + 1)" :disabled="!hasNext || loading">
-            Oldinga
+          <button
+            class="pag-button"
+            type="button"
+            @click="goToPage(currentPage + 1)"
+            :disabled="!hasNext || loading"
+          >
+            {{ $t('buttons.next') }}
           </button>
         </div>
       </main>
@@ -226,51 +320,118 @@
 
           <div class="drawer__content">
             <div class="drawer__image-wrap">
-              <img :src="normalizePhoto(popupImage)" alt="Popup Image" class="drawer__image" @error="onImgError($event)"
-                @click.stop="openImageFullscreen" />
+              <img
+                :src="normalizePhoto(popupImage)"
+                :alt="$t('card.imageAlt')"
+                class="drawer__image"
+                @error="onImgError($event)"
+                @click.stop="openImageFullscreen"
+              />
             </div>
 
             <div class="drawer__info">
-              <h2>Rasm ma’lumotlari</h2>
+              <h2>{{ $t('modal.title') }}</h2>
 
               <div v-if="popupLoading" class="drawer__loading">
                 <div class="spinner spinner--small"></div>
-                <p>Ma’lumotlar yuklanmoqda...</p>
+                <p>{{ $t('modal.loading') }}</p>
               </div>
 
               <template v-else>
                 <!-- Yuqori qism: Barcode chip + ism -->
                 <div class="info-header">
-                  <div v-if="popupData.barcode" class="chip chip--barcode">
+                  <div
+                    v-if="popupData.barcode"
+                    class="chip chip--barcode"
+                  >
                     <span>{{ popupData.barcode }}</span>
-                    <button class="iconbtn" type="button" title="Nusxa olish"
-                      @click.stop="copyToClipboard(popupData.barcode)" aria-label="Nusxa olish">
-                      <!-- copy icon (inline svg) -->
+                    <button
+                      class="iconbtn"
+                      type="button"
+                      :title="$t('buttons.copy')"
+                      @click.stop="copyToClipboard(popupData.barcode)"
+                      :aria-label="$t('buttons.copy')"
+                    >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                        <rect x="9" y="9" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5" />
-                        <rect x="4" y="4" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5"
-                          opacity=".6" />
+                        <rect
+                          x="9"
+                          y="9"
+                          width="11"
+                          height="11"
+                          rx="3"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                        />
+                        <rect
+                          x="4"
+                          y="4"
+                          width="11"
+                          height="11"
+                          rx="3"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          opacity=".6"
+                        />
                       </svg>
                     </button>
                   </div>
 
-                  <!-- NEW -->
-                  <div v-if="popupData.fish" class="chip chip--name" :title="popupData.fish">
+                  <div
+                    v-if="popupData.fish"
+                    class="chip chip--name"
+                    :title="popupData.fish"
+                  >
                     <span class="chip__text">{{ popupData.fish }}</span>
-                    <button class="iconbtn iconbtn--inline" type="button" aria-label="Nusxa olish"
-                      @click.stop="copyToClipboard(popupData.fish)">
+                    <button
+                      class="iconbtn iconbtn--inline"
+                      type="button"
+                      :aria-label="$t('buttons.copy')"
+                      :title="$t('buttons.copy')"
+                      @click.stop="copyToClipboard(popupData.fish)"
+                    >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                        <rect x="9" y="9" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5" />
-                        <rect x="4" y="4" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5"
-                          opacity=".6" />
+                        <rect
+                          x="9"
+                          y="9"
+                          width="11"
+                          height="11"
+                          rx="3"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                        />
+                        <rect
+                          x="4"
+                          y="4"
+                          width="11"
+                          height="11"
+                          rx="3"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          opacity=".6"
+                        />
                       </svg>
                     </button>
                   </div>
 
                   <div class="subline">
-                    <span v-if="popupData.region_name" class="pill">{{ popupData.region_name }}</span>
-                    <span v-if="popupData.district_name" class="pill">{{ popupData.district_name }}</span>
-                    <span v-if="popupData.delivery_date" class="pill">{{ formatDate(popupData.delivery_date) }}</span>
+                    <span
+                      v-if="popupData.region_name"
+                      class="pill"
+                    >
+                      {{ popupData.region_name }}
+                    </span>
+                    <span
+                      v-if="popupData.district_name"
+                      class="pill"
+                    >
+                      {{ popupData.district_name }}
+                    </span>
+                    <span
+                      v-if="popupData.delivery_date"
+                      class="pill"
+                    >
+                      {{ formatDate(popupData.delivery_date) }}
+                    </span>
                   </div>
                 </div>
 
@@ -278,16 +439,36 @@
                 <div class="kv-grid">
                   <!-- Aloqa bo‘lim -->
                   <div v-if="popupData.post_name" class="kv kv--span2">
-                    <span class="kv__label">Aloqa bo‘lim</span>
+                    <span class="kv__label">{{ $t('modal.postLabel') }}</span>
                     <span class="kv__value">
                       <span class="kv__text">{{ popupData.post_name }}</span>
-                      <button class="iconbtn iconbtn--inline" type="button" title="Nusxa olish"
-                        @click.stop="copyToClipboard(popupData.post_name)" aria-label="Nusxa olish">
-                        <!-- copy icon -->
+                      <button
+                        class="iconbtn iconbtn--inline"
+                        type="button"
+                        :title="$t('buttons.copy')"
+                        @click.stop="copyToClipboard(popupData.post_name)"
+                        :aria-label="$t('buttons.copy')"
+                      >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                          <rect x="9" y="9" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5" />
-                          <rect x="4" y="4" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5"
-                            opacity=".6" />
+                          <rect
+                            x="9"
+                            y="9"
+                            width="11"
+                            height="11"
+                            rx="3"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                          />
+                          <rect
+                            x="4"
+                            y="4"
+                            width="11"
+                            height="11"
+                            rx="3"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            opacity=".6"
+                          />
                         </svg>
                       </button>
                     </span>
@@ -295,42 +476,73 @@
 
                   <!-- Oluvchi manzili -->
                   <div v-if="popupData.street_name" class="kv kv--span2">
-                    <span class="kv__label">Oluvchi manzili</span>
+                    <span class="kv__label">{{ $t('modal.addressLabel') }}</span>
                     <span class="kv__value">
                       <span class="kv__text">{{ popupData.street_name }}</span>
-                      <button class="iconbtn iconbtn--inline" type="button" title="Nusxa olish"
-                        @click.stop="copyToClipboard(popupData.street_name)">
+                      <button
+                        class="iconbtn iconbtn--inline"
+                        type="button"
+                        :title="$t('buttons.copy')"
+                        @click.stop="copyToClipboard(popupData.street_name)"
+                        :aria-label="$t('buttons.copy')"
+                      >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                          <rect x="9" y="9" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5" />
-                          <rect x="4" y="4" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.5"
-                            opacity=".6" />
+                          <rect
+                            x="9"
+                            y="9"
+                            width="11"
+                            height="11"
+                            rx="3"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                          />
+                          <rect
+                            x="4"
+                            y="4"
+                            width="11"
+                            height="11"
+                            rx="3"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            opacity=".6"
+                          />
                         </svg>
                       </button>
                     </span>
                   </div>
-
                 </div>
 
                 <!-- Xarita kartasi -->
                 <div v-if="popupData.lon && popupData.lat" class="map-wrap">
-                  <a class="map-card"
-                    :href="`https://yandex.uz/maps/?pt=${popupData.lon},${popupData.lat}&z=${mapZoom}`" target="_blank"
-                    rel="noopener">
+                  <a
+                    class="map-card"
+                    :href="`https://yandex.uz/maps/?pt=${popupData.lon},${popupData.lat}&z=${mapZoom}`"
+                    target="_blank"
+                    rel="noopener"
+                  >
                     <div class="map-card__inner">
-                      <img class="map-card__image" :src="staticMapUrl(popupData.lon, popupData.lat, mapZoom)"
-                        alt="Yetkazilgan manzilni xaritada ko‘rish" />
+                      <img
+                        class="map-card__image"
+                        :src="staticMapUrl(popupData.lon, popupData.lat, mapZoom)"
+                        :alt="$t('map.deliveredAddressAlt')"
+                      />
                       <span class="map-card__pin"></span>
                     </div>
                     <div class="map-meta">
-                      <span class="map-meta__badge">Xaritada ko‘rish</span>
-                      <span class="map-meta__coord" v-if="popupData.lon && popupData.lat">
-                        {{ Number(popupData.lat).toFixed(6) }}, {{ Number(popupData.lon).toFixed(6) }}
+                      <span class="map-meta__badge">
+                        {{ $t('map.viewOnMap') }}
+                      </span>
+                      <span
+                        class="map-meta__coord"
+                        v-if="popupData.lon && popupData.lat"
+                      >
+                        {{ Number(popupData.lat).toFixed(6) }},
+                        {{ Number(popupData.lon).toFixed(6) }}
                       </span>
                     </div>
                   </a>
                 </div>
               </template>
-
             </div>
           </div>
         </div>
@@ -339,13 +551,25 @@
 
     <!-- Fullscreen image preview -->
     <transition name="fade">
-      <div v-if="showImageFullscreen" class="fullscreen" @click.self="closeImageFullscreen">
-        <button class="fullscreen__close" type="button" @click="closeImageFullscreen">
+      <div
+        v-if="showImageFullscreen"
+        class="fullscreen"
+        @click.self="closeImageFullscreen"
+      >
+        <button
+          class="fullscreen__close"
+          type="button"
+          @click="closeImageFullscreen"
+        >
           &times;
         </button>
 
-        <img :src="normalizePhoto(fullscreenImage || popupImage)" alt="Fullscreen image" class="fullscreen__image"
-          @error="onImgError($event)" />
+        <img
+          :src="normalizePhoto(fullscreenImage || popupImage)"
+          :alt="$t('card.imageAlt')"
+          class="fullscreen__image"
+          @error="onImgError($event)"
+        />
       </div>
     </transition>
   </div>
@@ -389,6 +613,9 @@ export default {
 
       imgFallback:
         "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==",
+
+      // til ro'yxati
+      locales: ["uz", "ru", "en"]
     };
   },
 
@@ -399,6 +626,9 @@ export default {
     hasNext() {
       return this.currentPage < this.totalPages;
     },
+    currentLocale() {
+      return this.$i18n.locale;
+    }
   },
 
   watch: {
@@ -414,10 +644,20 @@ export default {
     "$route.params.fish"(newFish) {
       this.localFish = newFish ? decodeURIComponent(newFish) : "";
       this.applyFilter();
-    },
+    }
   },
 
   methods: {
+    changeLocale(locale) {
+      if (!this.locales.includes(locale)) return;
+      this.$i18n.locale = locale;
+      try {
+        localStorage.setItem("locale", locale);
+      } catch (e) {
+        // localStorage bo'lmasa jim
+      }
+    },
+
     logout() {
       localStorage.removeItem("token");
       this.$router.push({ name: "Login" });
@@ -461,7 +701,6 @@ export default {
       return `https://static-maps.yandex.ru/1.x/?ll=${lonEnc},${latEnc}&z=${z}&size=650,350&l=map&pt=${lonEnc},${latEnc},pm2rdm`;
     },
 
-
     updateDistricts() {
       if (this.localRegion === "Buxoro") {
         this.districts = [
@@ -476,7 +715,7 @@ export default {
           "Olot",
           "Romitan",
           "Vobkent",
-          "Qorako'l",
+          "Qorako'l"
         ];
       } else if (this.localRegion === "Toshkent shahar") {
         this.districts = [
@@ -491,7 +730,7 @@ export default {
           "Yashnabad",
           "Yangi Hayot",
           "Yunusabad",
-          "Yakkasaray",
+          "Yakkasaray"
         ];
       } else if (this.localRegion === "Samarqand") {
         this.districts = [
@@ -511,7 +750,7 @@ export default {
           "Samarqand tumani",
           "Paxtachi",
           "Bulung'ur",
-          "Kattaqo'rg'on tumani",
+          "Kattaqo'rg'on tumani"
         ];
       } else if (this.localRegion === "Andijon") {
         this.districts = [
@@ -529,7 +768,7 @@ export default {
           "Ulug'nor",
           "Baliqchi",
           "Bo'ston",
-          "Qo'rg'ontepa",
+          "Qo'rg'ontepa"
         ];
       } else if (this.localRegion === "Surxondaryo") {
         this.districts = [
@@ -546,7 +785,7 @@ export default {
           "Sariosiyo",
           "Uzun",
           "Qiziriq",
-          "Denov",
+          "Denov"
         ];
       } else if (this.localRegion === "Namangan") {
         this.districts = [
@@ -561,7 +800,7 @@ export default {
           "Kosonsoy",
           "Namangan Tumani",
           "Uchqo'rg'on",
-          "Norin",
+          "Norin"
         ];
       } else if (this.localRegion === "Farg'ona") {
         this.districts = [
@@ -583,7 +822,7 @@ export default {
           "Uchko'prik",
           "So'x",
           "Bog'dod",
-          "Marg'ilon",
+          "Marg'ilon"
         ];
       } else if (this.localRegion === "Jizzax") {
         this.districts = [
@@ -599,7 +838,7 @@ export default {
           "Yangiobod",
           "Arnasoy",
           "Baxmal",
-          "Zarbdor",
+          "Zarbdor"
         ];
       } else if (this.localRegion === "Sirdaryo") {
         this.districts = [
@@ -611,7 +850,7 @@ export default {
           "Boyovut tumani",
           "Sayxunobod",
           "Sardoba",
-          "Mirzaobod",
+          "Mirzaobod"
         ];
       } else if (this.localRegion === "Qashqadaryo") {
         this.districts = [
@@ -628,7 +867,7 @@ export default {
           "Kasbi",
           "Muborak",
           "Dehqonobod",
-          "Shahrisabz",
+          "Shahrisabz"
         ];
       } else if (this.localRegion === "Toshkent viloyati") {
         this.districts = [
@@ -651,7 +890,7 @@ export default {
           "Yuqori Chirchiq",
           "Bostanlik",
           "Chinaz",
-          "Zangiota",
+          "Zangiota"
         ];
       } else if (this.localRegion === "Xorazm") {
         this.districts = [
@@ -666,7 +905,7 @@ export default {
           "Gurlan",
           "Yangiariq",
           "Xiva",
-          "Hazorasp",
+          "Hazorasp"
         ];
       } else if (this.localRegion === "Navoiy") {
         this.districts = [
@@ -678,7 +917,7 @@ export default {
           "Uchquduq",
           "Navbahor",
           "Nurota",
-          "Zarafshan",
+          "Zarafshan"
         ];
       } else if (this.localRegion === "Qoraqalpog'iston Respublikasi") {
         this.districts = [
@@ -696,7 +935,7 @@ export default {
           "Amudaryo Tumani",
           "Kegeyli",
           "To'rtko'l",
-          "Qanliko'l",
+          "Qanliko'l"
         ];
       } else {
         this.districts = [];
@@ -730,8 +969,8 @@ export default {
               delivery_date: this.date,
               is_person: this.is_person,
               page: pageZero,
-              page_size: this.itemsPerPage,
-            },
+              page_size: this.itemsPerPage
+            }
           }
         );
 
@@ -744,12 +983,12 @@ export default {
           Number.isFinite(totalPagesFromApi) && totalPagesFromApi > 0
             ? totalPagesFromApi
             : Math.max(
-              1,
-              Math.ceil(
-                (Number.isFinite(countFromApi) ? countFromApi : 0) /
-                this.itemsPerPage
-              )
-            );
+                1,
+                Math.ceil(
+                  (Number.isFinite(countFromApi) ? countFromApi : 0) /
+                    this.itemsPerPage
+                )
+              );
 
         this.totalCount = Number.isFinite(countFromApi)
           ? countFromApi
@@ -782,7 +1021,7 @@ export default {
     applyFilter() {
       this.currentPage = 1;
       this.fetchData();
-      this.scrollContentTop();   // <-- shu
+      this.scrollContentTop();
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
 
@@ -802,13 +1041,14 @@ export default {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
         this.fetchData();
-        this.scrollContentTop(); // <-- shu
+        this.scrollContentTop();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     },
+
     scrollContentTop() {
-    this.$refs.content?.scrollTo({ top: 0, behavior: "smooth" });
-  },
+      this.$refs.content?.scrollTo({ top: 0, behavior: "smooth" });
+    },
 
     async openPopup(item) {
       this.popupImage = item?.photo || "";
@@ -820,7 +1060,7 @@ export default {
         const token = localStorage.getItem("token");
         const url = `https://trackapi.pochta.uz/api/show_photos/users/${item.id}`;
         const { data } = await axios.get(url, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` }
         });
 
         this.popupData = data || {};
@@ -855,12 +1095,11 @@ export default {
       this.showImageFullscreen = false;
       this.fullscreenImage = "";
     },
+
     copyToClipboard(text) {
       if (!text) return;
-      navigator.clipboard?.writeText(String(text)).catch(() => { });
-    },
-
-    
+      navigator.clipboard?.writeText(String(text)).catch(() => {});
+    }
   },
 
   mounted() {
@@ -871,7 +1110,7 @@ export default {
     if (this.$route.params.fish)
       this.localFish = decodeURIComponent(this.$route.params.fish);
     this.fetchData();
-  },
+  }
 };
 </script>
 
@@ -962,6 +1201,42 @@ export default {
   gap: 10px;
 }
 
+/* Til switcher */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border-radius: 999px;
+  background: #eef2ff;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4b5563;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+}
+
+.lang-btn:hover {
+  background: rgba(191, 219, 254, 0.7);
+  color: #1d4ed8;
+}
+
+.lang-btn--active {
+  background: #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.45);
+}
+
 /* Badge */
 .badge {
   padding: 3px 10px;
@@ -982,7 +1257,6 @@ export default {
   font-size: 15px;
   cursor: pointer;
   font-weight: 600;
-  /* 500 o‘rniga 600 (jirqiroq) */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -990,7 +1264,6 @@ export default {
   transition: all 0.16s ease-out;
   white-space: nowrap;
 }
-
 
 /* Filterni qo‘llash – oq pill, ko‘k nur */
 .btn--primary {
@@ -1104,12 +1377,9 @@ export default {
 
 .sidebar__actions {
   margin-top: 18px;
-  /* sal pastroqda turadi */
   display: flex;
   justify-content: center;
-  /* o‘rtaga joylashadi */
 }
-
 
 /* Form elements */
 .form-group {
@@ -1368,7 +1638,6 @@ export default {
 .drawer__panel {
   width: 100%;
   max-width: 1120px;
-  /* avval 900px edi – endi ancha katta */
   max-height: 92vh;
   background: #ffffff;
   border-radius: 26px;
@@ -1376,10 +1645,8 @@ export default {
   box-shadow: 0 22px 50px rgba(15, 23, 42, 0.4);
   position: relative;
   padding: 22px 26px 24px;
-  /* ichki otstuplar ham kattaroq */
   margin: 24px;
 }
-
 
 .drawer__close {
   position: absolute;
@@ -1399,7 +1666,6 @@ export default {
   display: grid;
   grid-template-columns: minmax(0, 52%) minmax(0, 48%);
   gap: 20px;
-  /* rasm va matn orasini kengaytirdik */
   margin-top: 12px;
 }
 
@@ -1412,14 +1678,12 @@ export default {
   align-items: center;
   justify-content: center;
   min-height: 420px;
-  /* rasm oynasi balandroq */
 }
 
 .drawer__image {
   width: 100%;
   height: 100%;
   max-height: 520px;
-  /* rasm kattaroq bo‘lib ko‘rinadi */
   object-fit: contain;
   cursor: zoom-in;
 }
@@ -1444,36 +1708,142 @@ export default {
   margin-top: 8px;
 }
 
-/* Info rows */
-.info-row {
+/* Info header */
+.info-header {
   display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  /* avval 12px edi */
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.info-row__label {
-  flex: 0 0 135px;
-  /* label biroz kengroq */
-  color: #6b7280;
-}
-
-.info-row__value {
-  flex: 1;
+.person-name {
+  font-size: 18px;
+  font-weight: 600;
   color: #0f172a;
+  line-height: 1.2;
 }
 
-/* Xarita qatori */
-.info-row--map {
-  align-items: flex-start;
+.subline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-/* WhatsApp uslubidagi xarita kartasi */
+/* Pills & chips */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #1d4ed8;
+  background: #eef2ff;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #e0e7ff, #ffffff);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  width: fit-content;
+}
+
+.chip--barcode {
+  color: #111827;
+}
+
+/* Key–value grid */
+.kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.kv {
+  position: relative;
+  min-height: 64px;
+  border-radius: 16px;
+  background: #f9fafb;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.kv--span2 {
+  grid-column: span 2;
+}
+
+.kv__label {
+  font-size: 12px;
+  color: #6b7280;
+  padding-block: 6px;
+}
+
+.kv__value {
+  font-size: 14px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kv__text {
+  flex: 1;
+  text-align: center;
+}
+
+.kv__value .iconbtn {
+  margin-left: auto;
+}
+
+/* Icon button (copy) */
+.iconbtn {
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: #fff;
+  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #334155;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.iconbtn:hover {
+  background: #eef2ff;
+  border-color: #1d4ed8;
+}
+
+.iconbtn--inline {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+}
+
+/* Map wrap + caption */
+.map-wrap {
+  margin-top: 2px;
+}
+
 .map-card {
+  width: 100%;
   display: inline-flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   text-decoration: none;
 }
 
@@ -1487,17 +1857,13 @@ export default {
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
-/* Xarita kartasi biroz kattaroq */
 .map-card__image {
   display: block;
-  width: 300px;
-  /* avvalgidan kattaroq */
-  max-width: 100%;
-  height: 200px;
+  width: 100%;
+  height: 230px;
   object-fit: cover;
 }
 
-/* Qizil pin */
 .map-card__pin {
   position: absolute;
   top: 50%;
@@ -1506,22 +1872,39 @@ export default {
   height: 18px;
   border-radius: 999px;
   background: #ef4444;
-  border: 2px solid #ffffff;
+  border: 2px solid #fff;
   transform: translate(-50%, -80%);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
-}
-
-.map-card__caption {
-  font-size: 12px;
-  /* matn ham biroz kattaroq */
-  color: var(--accent-strong);
-  margin-left: 4px;
-  margin-top: 2px;
 }
 
 .map-card:hover .map-card__inner {
   transform: translateY(-2px);
   box-shadow: 0 20px 38px rgba(15, 23, 42, 0.28);
+}
+
+.map-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-meta__badge {
+  font-size: 12px;
+  color: #1d4ed8;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+.map-meta__coord {
+  font-size: 12px;
+  color: #6b7280;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  border: 1px solid rgba(148, 163, 184, 0.5);
 }
 
 /* Drawer animatsiya */
@@ -1607,6 +1990,14 @@ export default {
   .drawer__content {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .kv-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kv--span2 {
+    grid-column: span 1;
+  }
 }
 
 @media (max-width: 720px) {
@@ -1637,430 +2028,59 @@ export default {
   }
 }
 
-/* Info header */
-.info-header {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.person-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #0f172a;
-  line-height: 1.2;
-}
-
-.subline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-/* Pills & chips */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 12px;
-  color: #1d4ed8;
-  background: #eef2ff;
-  border: 1px solid rgba(37, 99, 235, .25);
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  background: linear-gradient(135deg, #e0e7ff, #ffffff);
-  border: 1px solid rgba(148, 163, 184, .7);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, .08);
-  width: fit-content;
-}
-
-.chip--barcode {
-  color: #111827;
-}
-
-/* Key–value grid */
-.kv-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.kv {
-  background: #f9fafb;
-  border: 1px solid rgba(148, 163, 184, .6);
-  border-radius: 16px;
-  padding: 10px 12px;
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  align-items: start;
-  column-gap: 8px;
-}
-
-.kv--span2 {
-  grid-column: span 2;
-}
-
-.kv__label {
-  font-size: 12px;
-  color: #6b7280;
-}
-
-.kv__value {
-  font-size: 14px;
-  color: #0f172a;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Icon button (copy) */
-.iconbtn {
-  border: 1px solid rgba(148, 163, 184, .6);
-  background: #fff;
-  border-radius: 10px;
-  width: 26px;
-  height: 26px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #334155;
-  transition: background .15s ease, border-color .15s ease;
-}
-
-.iconbtn:hover {
-  background: #eef2ff;
-  border-color: #1d4ed8;
-}
-
-.iconbtn--inline {
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
-}
-
-/* Map wrap + caption */
-.map-wrap {
-  margin-top: 2px;
-}
-
-.map-card {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 6px;
-  text-decoration: none;
-}
-
-.map-card__inner {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, .6);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, .18);
-  background: #e5f3ff;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.map-card__image {
-  display: block;
-  width: 340px;
-  max-width: 100%;
-  height: 210px;
-  object-fit: cover;
-}
-
-.map-card__pin {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: #ef4444;
-  border: 2px solid #fff;
-  transform: translate(-50%, -80%);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, .45);
-}
-
-.map-card:hover .map-card__inner {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 38px rgba(15, 23, 42, .28);
-}
-
-.map-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.map-meta__badge {
-  font-size: 12px;
-  color: #1d4ed8;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #eef2ff;
-  border: 1px solid rgba(37, 99, 235, .25);
-}
-
-.map-meta__coord {
-  font-size: 12px;
-  color: #6b7280;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #f3f4f6;
-  border: 1px solid rgba(148, 163, 184, .5);
-}
-
-/* Responsive tuzatishlar */
-@media (max-width: 1024px) {
-  .kv-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .kv--span2 {
-    grid-column: span 1;
-  }
-}
-
-/* Ichki chetlar biroz tekislansin */
-.drawer__info {
-  padding: 4px 2px 0;
-}
-
-/* Chip/Pill balandligi bir xil, matn markazda */
-.chip,
-.pill {
-  line-height: 1;
-}
-
-.chip--barcode {
-  height: 36px;
-  padding: 0 12px;
-}
-
-.chip--barcode>span {
-  line-height: 36px;
-}
-
-/* Ism va pastki qatordagi pilllar orasidagi ritm */
-.person-name {
-  margin-top: 2px;
-}
-
-.subline {
-  gap: 8px;
-}
-
-/* Key–value kartalar: balandliklar teng, label kengligi barqaror */
-.kv-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.kv {
-  position: relative;
-  min-height: 64px;
-  /* teng balandlik */
-  border-radius: 16px;
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  /* labellar bir chiziqda */
-  align-items: center;
-}
-
-.kv__label {
-  font-size: 12px;
-  color: #6b7280;
-  padding-block: 6px;
-  /* vertikal markazlash */
-}
-
-.kv__value {
-  font-size: 14px;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.kv__value .iconbtn {
-  margin-left: auto;
-}
-
-/* ikonka doim o‘ng chetda */
-.kv--span2 {
-  grid-column: span 2;
-}
-
-/* Ikonkali tugma tekislash */
-.iconbtn {
-  width: 28px;
-  height: 28px;
-}
-
-/* Xarita ham kartalar kengligiga mos to‘lsin */
-.map-card {
-  width: 100%;
-}
-
-.map-card__image {
-  width: 100%;
-  height: 230px;
-}
-
-.map-meta {
-  display: flex;
-  justify-content: space-between;
-}
-
-/* Kenglik kichrayganda kartalar bitta ustunga tushsin */
-@media (max-width: 1024px) {
-  .kv-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .kv--span2 {
-    grid-column: span 1;
-  }
-}
-
-/* Matnni markazga, ikonka o‘ng tomonga */
-.kv__value {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.kv__text {
-  flex: 1;
-  text-align: center;
-}
-
-/* <<< matn har doim markazda */
-.kv__value .iconbtn {
-  margin-left: auto;
-}
-
-/* <<< ikonka o‘ng chetga “yopishadi” */
-
-/* Barqaror balandlik va kenglik */
-.kv {
-  min-height: 64px;
-  grid-template-columns: 160px 1fr;
-}
-
-.kv--span2 {
-  grid-column: span 2;
-}
-
-/* 2 ustunni egallasin (rasmdagidek) */
-/* Name uchun kapsula – ikkinchi rasmga o‘xshash */
-.chip--name {
-  height: 36px;
-  padding: 0 6px 0 12px;
-  width: fit-content;
-  max-width: 100%;
-  background: linear-gradient(180deg, #eef2ff 0%, #ffffff 100%);
-  border: 1px solid rgba(148, 163, 184, .7);
-  border-radius: 999px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, .08);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #0f172a;
-}
-
-.chip__text {
-  line-height: 36px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.chip--name .iconbtn {
-  width: 28px;
-  height: 28px;
-  border-radius: 12px;
-  margin-left: 4px;
-  /* tugma o‘ng chetda */
-}
-
-.sidebar__footer{
-  margin-top: auto;              /* pastga "yopishtiradi" */
+/* Sidebar footer */
+.sidebar__footer {
+  margin-top: auto;
   padding-top: 8px;
-  border-top: 1px dashed rgba(148,163,184,.35);
-  font-size: 11px;               /* kichik yozuv */
-  color: var(--text-soft);       /* xira rang */
-  opacity: .75;                  /* yanada xira */
+  border-top: 1px dashed rgba(148, 163, 184, 0.35);
+  font-size: 11px;
+  color: var(--text-soft);
+  opacity: 0.75;
   text-align: center;
 }
 
-.devlink{
-  color: inherit;                /* shu rangda qolsin */
+.devlink {
+  color: inherit;
   text-decoration: none;
-  border-bottom: 1px dotted rgba(148,163,184,.6);
+  border-bottom: 1px dotted rgba(148, 163, 184, 0.6);
 }
 
-.devlink:hover{
+.devlink:hover {
   color: var(--accent-strong);
   border-bottom-color: var(--accent-strong);
   opacity: 1;
 }
+
 /* Butun sahifa o‘lchamiga sig‘sin va tashqi skroll bo‘lmasin */
-.dashboard.v2{
+.dashboard.v2 {
   height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding-bottom: 0px; 
+  padding-bottom: 0px;
 }
 
 /* Pastdagi grid maydon to‘liq bo‘yi bilan tursin, ichki elementlar scroll qila olishi uchun */
-.dashboard__body{
+.dashboard__body {
   flex: 1 1 auto;
-  min-height: 0;               /* muhim: ichki overflow ishlashi uchun */
+  min-height: 0;
   display: grid;
-  grid-template-columns: 290px minmax(0,1fr);
+  grid-template-columns: 290px minmax(0, 1fr);
   gap: 18px;
-  overflow: hidden;            /* faqat o‘ng kolonka skroll bo‘lsin */
+  overflow: hidden;
 }
 
 /* Faqat o‘ng kontent ichki skrollda harakatlanadi */
-.content{
+.content {
   overflow-y: auto;
   min-height: 0;
   height: 100%;
-  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); /* +past “safe area” */
-  scroll-padding-bottom: 80px; /* skroll oxirida ham pastda joy qoldiradi */
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-bottom: 80px;
 }
-.pagination--bottom{
+
+.pagination--bottom {
   background: var(--bg-elevated);
   padding: 25px 0;
 }
-
-
-/* Mobil holatda ham faqat kontent skroll bo‘lib qolsin */
-@media (max-width: 1024px){
-  .dashboard__body{
-    grid-template-columns: minmax(0,1fr);
-  }
-  .content{
-    overflow-y: auto;
-  }
-}
-
 </style>

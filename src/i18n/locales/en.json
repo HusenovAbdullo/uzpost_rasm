@@ -1,0 +1,154 @@
+{
+    "app": {
+      "title": "HYBRID LETTER DELIVERY CONTROL SYSTEM",
+      "admin": "Admin",
+      "developer": "Developer",
+      "developerTooltip": "Open in Telegram",
+      "developerLabel": "Developer:"
+    },
+    "buttons": {
+      "statistics": "Statistics",
+      "logout": "Logout",
+      "applyFilters": "Apply filters",
+      "clear": "Clear",
+      "clearFilters": "Clear filters",
+      "refresh": "Refresh",
+      "prev": "Previous",
+      "next": "Next",
+      "copy": "Copy",
+      "dashboard": "Dashboard"
+    },
+    "filters": {
+      "title": "Filters",
+      "region": "Region",
+      "allRegions": "All regions",
+      "district": "District",
+      "allDistricts": "All districts",
+      "barcode": "Barcode",
+      "barcodePlaceholder": "Barcode",
+      "fish": "Full name",
+      "fishPlaceholder": "Full name",
+      "post": "Post office",
+      "postPlaceholder": "Post office",
+      "date": "Date",
+      "person": "Person detection",
+      "personAll": "All",
+      "personTrue": "Detected",
+      "personFalse": "Not detected"
+    },
+    "sidebar": {
+      "summaryTitle": "Summary",
+      "totalRecords": "Total records:",
+      "page": "Page:"
+    },
+    "toolbar": {
+      "results": "Results",
+      "pageShort": "Page",
+      "recordsShort": "records"
+    },
+    "states": {
+      "loading": "Loading data...",
+      "noResults": "No images found for the selected filters."
+    },
+    "card": {
+      "imageAlt": "Image",
+      "moreTooltip": "View full information",
+      "noBarcode": "Barcode is not specified"
+    },
+    "modal": {
+      "title": "Image details",
+      "loading": "Loading details...",
+      "postLabel": "Post office",
+      "addressLabel": "Recipient address"
+    },
+    "map": {
+      "viewOnMap": "View on map",
+      "deliveredAddressAlt": "View delivered address on the map"
+    },
+    "stats": {
+      "title": "Fake Photo Statistics",
+  
+      "modeTitle": "Statistics mode",
+      "modeSubtitle": "Please choose which metric to view:",
+      "similarityButton": "Similarity rate",
+      "fakeButton": "Fake photo rate",
+  
+      "fakeTitle": "Statistics by fake photo rate",
+      "similarityTitle": "Statistics by similarity rate",
+  
+      "listHeaderSimilarity": "Regions, districts and persons are sorted by similarity rate from top to bottom (high → low).",
+      "listHeaderFake": "Regions, districts and persons are sorted by fake photo rate from top to bottom (high → low).",
+  
+      "legendGood": "Low percentage — good situation",
+      "legendBad": "High percentage — many issues",
+      "legendHint": "The list is always sorted from higher percentages to lower ones.",
+  
+      "empty": "No data found for the selected mode.",
+  
+      "toolbar": {
+        "totalRegions": "Total regions",
+        "loadedDistricts": "Loaded districts",
+        "loadedFishes": "Loaded persons"
+      },
+  
+      "summaryTitle": "Quick summary",
+      "summaryMode": "Mode",
+      "summaryRegionsCount": "Number of regions",
+      "summaryCurrentRegion": "Current region",
+      "summaryCurrentDistrict": "Current district",
+  
+      "sidebar": {
+        "title": "Statistics",
+        "collapseAll": "Collapse all",
+        "description": "Regions below are sorted by fake photo percentage from top to bottom (high → low).",
+        "gradientTitle": "Color legend:",
+        "legendHigh": "High percentage (many fake photos) – red",
+        "legendMedium": "Medium – yellow",
+        "legendLow": "Low percentage (few fake photos) – green",
+        "summaryTitle": "Quick summary",
+        "totalRegions": "Regions:",
+        "loadedDistricts": "Loaded districts:",
+        "loadedFishes": "Loaded persons:",
+        "actionsTitle": "Actions",
+        "expandAllRegions": "Expand all regions"
+      },
+  
+      "metricRegionFake": "Fake photo rate by region",
+      "metricRegionSimilarity": "Similarity rate by region",
+      "metricDistrictFake": "Fake photo rate by district",
+      "metricDistrictSimilarity": "Similarity rate by district",
+      "metricFishFake": "Fake photo rate by person",
+      "metricFishSimilarity": "Similarity rate by person",
+  
+      "labels": {
+        "fakePercent": "Fake percentage",
+        "similarity": "Similarity"
+      },
+  
+      "btnViewAll": "View photos",
+      "btnViewAllShort": "All",
+      "btnViewRealShort": "Real",
+      "btnViewFakeShort": "Fake",
+  
+      "buttons": {
+        "viewAll": "All photos",
+        "viewReal": "Real photos",
+        "viewFake": "Fake photos",
+        "openDistricts": "Show districts",
+        "openFishes": "Show persons",
+        "close": "Hide"
+      },
+  
+      "states": {
+        "noRegions": "No data found. Please check the token or API settings.",
+        "noDistricts": "District data is loading or not found.",
+        "noFishes": "Person data is loading or not found."
+      },
+  
+      "modes": {
+        "fake": "Fake photo rate",
+        "similarity": "Similarity rate"
+      }
+    }
+  }
+  
