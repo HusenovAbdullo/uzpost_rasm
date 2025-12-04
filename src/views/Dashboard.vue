@@ -606,7 +606,7 @@ export default {
 
       itemsPerPage: 56,
       districts: [],
-      is_person: "",
+      is_person: "",      // "" | "true" | "false"
       isAdmin: true,
 
       mapZoom: 10,
@@ -614,7 +614,6 @@ export default {
       imgFallback:
         "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==",
 
-      // til ro'yxati
       locales: ["uz", "ru", "en"]
     };
   },
@@ -627,7 +626,7 @@ export default {
       return this.currentPage < this.totalPages;
     },
     currentLocale() {
-      return this.$i18n.locale;
+      return this.$i18n?.locale || "uz";
     }
   },
 
@@ -644,13 +643,22 @@ export default {
     "$route.params.fish"(newFish) {
       this.localFish = newFish ? decodeURIComponent(newFish) : "";
       this.applyFilter();
+    },
+    // MUHIM: Statistika sahifasidan keladigan ?is_person= query ni kuzatamiz
+    "$route.query.is_person"(newVal) {
+      if (newVal === "true" || newVal === "false") {
+        this.is_person = newVal;
+      } else {
+        this.is_person = "";
+      }
+      this.applyFilter();
     }
   },
 
   methods: {
     changeLocale(locale) {
       if (!this.locales.includes(locale)) return;
-      this.$i18n.locale = locale;
+      if (this.$i18n) this.$i18n.locale = locale;
       try {
         localStorage.setItem("locale", locale);
       } catch (e) {
@@ -693,7 +701,6 @@ export default {
       }
     },
 
-    // Yandex static map URL (xarita rasmi uchun)
     staticMapUrl(lon, lat, zoom) {
       const lonEnc = encodeURIComponent(lon);
       const latEnc = encodeURIComponent(lat);
@@ -967,7 +974,7 @@ export default {
               district: this.localDistrict,
               post_name: this.post_name,
               delivery_date: this.date,
-              is_person: this.is_person,
+              is_person: this.is_person, // MUHIM: query’dan kelgan qiymat
               page: pageZero,
               page_size: this.itemsPerPage
             }
@@ -1103,12 +1110,26 @@ export default {
   },
 
   mounted() {
+    // URL parametrlaridan region/district/fish
     this.localRegion = this.$route.params.region || this.region || "";
     this.updateDistricts();
-    if (this.$route.params.district)
+
+    if (this.$route.params.district) {
       this.localDistrict = this.$route.params.district;
-    if (this.$route.params.fish)
+    }
+
+    if (this.$route.params.fish) {
       this.localFish = decodeURIComponent(this.$route.params.fish);
+    }
+
+    // Statistika sahifasidan keladigan ?is_person=true/false ni o‘qish
+    const qp = this.$route.query?.is_person;
+    if (qp === "true" || qp === "false") {
+      this.is_person = qp;
+    } else {
+      this.is_person = "";
+    }
+
     this.fetchData();
   }
 };
@@ -1154,12 +1175,17 @@ export default {
 /* Root */
 .dashboard.v2 {
   min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(180deg, #e5edff 0, #f9fafb 40%, #f3f4f6 100%);
   color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
   padding: 16px;
   box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0px;
 }
 
 /* AppBar */
@@ -1250,6 +1276,7 @@ export default {
   color: #ffffff;
 }
 
+/* Buttons */
 .btn {
   border: none;
   border-radius: 999px;
@@ -1290,7 +1317,7 @@ export default {
     0 12px 28px rgba(254, 202, 202, 0.9);
 }
 
-.btn--danger:hover {
+.btn--danger:hover:not(:disabled) {
   background: #fef2f2;
   color: #b91c1c;
 }
@@ -1301,8 +1328,13 @@ export default {
   border: 1px solid rgba(148, 163, 184, 0.6);
 }
 
-.btn--ghost:hover {
+.btn--ghost:hover:not(:disabled) {
   background: #eef2ff;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Link button */
@@ -1318,9 +1350,12 @@ export default {
 
 /* Layout */
 .dashboard__body {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   grid-template-columns: 290px minmax(0, 1fr);
   gap: 18px;
+  overflow: hidden;
 }
 
 /* Sidebar */
@@ -1429,6 +1464,11 @@ export default {
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+  height: 100%;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-bottom: 80px;
 }
 
 /* Toolbar */
@@ -1479,6 +1519,8 @@ export default {
 .pagination--bottom {
   justify-content: center;
   margin-top: 14px;
+  background: var(--bg-elevated);
+  padding: 25px 0;
 }
 
 .pag-button {
@@ -1714,13 +1756,6 @@ export default {
   flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
-}
-
-.person-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #0f172a;
-  line-height: 1.2;
 }
 
 .subline {
@@ -1973,6 +2008,29 @@ export default {
   opacity: 0;
 }
 
+/* Sidebar footer */
+.sidebar__footer {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.35);
+  font-size: 11px;
+  color: var(--text-soft);
+  opacity: 0.75;
+  text-align: center;
+}
+
+.devlink {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(148, 163, 184, 0.6);
+}
+
+.devlink:hover {
+  color: var(--accent-strong);
+  border-bottom-color: var(--accent-strong);
+  opacity: 1;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .dashboard__body {
@@ -2026,61 +2084,5 @@ export default {
     flex: 1;
     justify-content: flex-end;
   }
-}
-
-/* Sidebar footer */
-.sidebar__footer {
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px dashed rgba(148, 163, 184, 0.35);
-  font-size: 11px;
-  color: var(--text-soft);
-  opacity: 0.75;
-  text-align: center;
-}
-
-.devlink {
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px dotted rgba(148, 163, 184, 0.6);
-}
-
-.devlink:hover {
-  color: var(--accent-strong);
-  border-bottom-color: var(--accent-strong);
-  opacity: 1;
-}
-
-/* Butun sahifa o‘lchamiga sig‘sin va tashqi skroll bo‘lmasin */
-.dashboard.v2 {
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0px;
-}
-
-/* Pastdagi grid maydon to‘liq bo‘yi bilan tursin, ichki elementlar scroll qila olishi uchun */
-.dashboard__body {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 290px minmax(0, 1fr);
-  gap: 18px;
-  overflow: hidden;
-}
-
-/* Faqat o‘ng kontent ichki skrollda harakatlanadi */
-.content {
-  overflow-y: auto;
-  min-height: 0;
-  height: 100%;
-  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-  scroll-padding-bottom: 80px;
-}
-
-.pagination--bottom {
-  background: var(--bg-elevated);
-  padding: 25px 0;
 }
 </style>

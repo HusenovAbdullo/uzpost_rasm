@@ -906,7 +906,7 @@
   .content {
     background: var(--bg-elevated);
     border-radius: 22px;
-    padding: 14px 16px 18px;
+    padding: px 16px 18px;
     border: 1px solid var(--border-subtle);
     box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
     display: flex;
