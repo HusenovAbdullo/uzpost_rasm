@@ -711,8 +711,8 @@ export default {
     updateDistricts() {
       if (this.localRegion === "Buxoro") {
         this.districts = [
-          "Jondor",
           "Buxoro Tuman",
+          "Jondor",
           "Peshku",
           "Qorovulbozor",
           "Buxoro Shahar",
@@ -742,22 +742,22 @@ export default {
       } else if (this.localRegion === "Samarqand") {
         this.districts = [
           "Samarqand",
-          "Nurobod",
+          "Kattaqo'rg'on tumani",
           "Kattaqo'rg'on",
+          "Nurobod",
+          "Kattaqo'rg'on shahri",
           "Payariq",
           "Samarqand shahri",
           "Pastdarg'om",
           "Ishtixon",
           "Oqdaryo",
           "Narpay",
-          "Qo'shhrabot",
+          "Qo'shrabot",
           "Urgut",
           "Jomboy",
           "Toyloq",
-          "Samarqand tumani",
           "Paxtachi",
-          "Bulung'ur",
-          "Kattaqo'rg'on tumani"
+          "Bulung'ur"
         ];
       } else if (this.localRegion === "Andijon") {
         this.districts = [
@@ -796,6 +796,7 @@ export default {
         ];
       } else if (this.localRegion === "Namangan") {
         this.districts = [
+          "Namangan Tumani",
           "Namangan shahri",
           "Uychi",
           "Pop",
@@ -805,12 +806,12 @@ export default {
           "Mingbuloq",
           "Chortoq",
           "Kosonsoy",
-          "Namangan Tumani",
           "Uchqo'rg'on",
           "Norin"
         ];
       } else if (this.localRegion === "Farg'ona") {
         this.districts = [
+          "Farg'ona tumani",
           "Dang'ara",
           "Beshariq",
           "Oltiariq",
@@ -821,7 +822,6 @@ export default {
           "Quvasoy",
           "Quva",
           "Farg'ona shahar",
-          "Farg'ona tumani",
           "Toshloq",
           "Rishton",
           "Buvayda",
@@ -865,8 +865,8 @@ export default {
           "Qamashi",
           "G'uzor",
           "Qarshi Shahri",
-          "Nishon",
-          "Mirishkor",
+          "Yangi-Nishon",
+          "Yangi-Mirishkor",
           "Koson",
           "Yakkabog'",
           "Kitob",
@@ -878,8 +878,9 @@ export default {
         ];
       } else if (this.localRegion === "Toshkent viloyati") {
         this.districts = [
+          "Toshkent Tuman",
           "Olmaliq shahri",
-          "Buka",
+          "Bo‘ka",
           "Oqqo'rg'on",
           "Urta Chirchiq",
           "Bekobod shahri",
@@ -887,7 +888,6 @@ export default {
           "Ohangaron",
           "Quyi Chirchiq",
           "Bekobod tumani",
-          "Toshkent Tuman",
           "Yangiyul shahri",
           "Qibray",
           "Angren Shahri",
@@ -901,7 +901,7 @@ export default {
         ];
       } else if (this.localRegion === "Xorazm") {
         this.districts = [
-          "Tuproqqal'a",
+          "Tuproqqalʼa",
           "Xonqa",
           "Urganch Shahri",
           "Shovot",
@@ -928,19 +928,19 @@ export default {
         ];
       } else if (this.localRegion === "Qoraqalpog'iston Respublikasi") {
         this.districts = [
-          "Ellikqala",
+          "Nukus tumani",
+          "Ellikqal’a",
           "Qo'ng'irot",
           "Nukus Shahar",
-          "Nukus tumani",
           "Moynoq",
           "Xo'jayli",
-          "Beruniy Tumani",
-          "Chimboy tumani",
+          "Beruniy tumani ",
+          "Chimbay",
           "Shumanay",
           "Taxtako'pir",
           "Qorao'zak",
           "Amudaryo Tumani",
-          "Kegeyli",
+          "Kegeyli PAB",
           "To'rtko'l",
           "Qanliko'l"
         ];
